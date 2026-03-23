@@ -1,0 +1,45 @@
+## Instalación del Sistema
+
+El sistema **Gestor de Horarios de Maestros** puede instalarse en la computadora del rector o en cualquier equipo autorizado de la universidad siguiendo los pasos descritos a continuación.
+
+### Requisitos del Sistema
+
+Para ejecutar correctamente la aplicación se requiere:
+
+- Sistema Operativo: Windows 10 o superior
+- Visual Studio instalado (para ejecutar el proyecto desde el código)
+- MySQL Server instalado
+- Conexión a la base de datos configurada
+- .NET Framework compatible con la aplicación
+
+### Pasos de Instalación
+
+1. Descargar o clonar el repositorio del proyecto desde GitHub.
+
+2. Abrir el archivo de solución del proyecto:
+
+ Gestor de Horarios de Maestros.
+ 
+ 
+3. Instalar MySQL Server y crear la base de datos correspondiente al sistema.
+
+4. Configurar la conexión a la base de datos desde el menú **Conexión** dentro de la aplicación.
+
+5. Ejecutar el sistema presionando **F5** en Visual Studio o abriendo el archivo ejecutable del programa.
+
+### Ejecución del Sistema
+
+Una vez instalado y configurado, el sistema permitirá:
+
+- Gestionar horarios de maestros
+- Asignar materias
+- Buscar horarios
+- Modificar registros
+- Eliminar materias
+- Visualizar los horarios en la tabla principal
+
+### Consideraciones
+
+Se recomienda que el sistema sea instalado únicamente en computadoras autorizadas por la universidad para garantizar la seguridad de la información académica.
+
+También se recomienda realizar copias de seguridad periódicas de la base de datos.

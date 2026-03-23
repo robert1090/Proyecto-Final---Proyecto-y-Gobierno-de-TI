@@ -1,6 +1,54 @@
 # Proyecto Final - Proyecto y Gobierno de TI: Gestor de Horarios de Maestros
 
-## Este repositorio esta destinado para el proyecto final de la asignatura de Proyecto y Gobierno de TI
+## Descripcion del Proyecto:
+Este repositorio esta destinado para el proyecto final de la asignatura de Proyecto y Gobierno de TI, el cual posee la finalidad de realizar un Gestor de Horarios para las Materias y Maestros de la Universidad O&M La Romana.
+
+## Instalación del Sistema
+
+El sistema **Gestor de Horarios de Maestros** puede instalarse en la computadora del rector o en cualquier equipo autorizado de la universidad siguiendo los pasos descritos a continuación.
+
+### Requisitos del Sistema
+
+Para ejecutar correctamente la aplicación se requiere:
+
+- Sistema Operativo: Windows 10 o superior
+- Visual Studio instalado (para ejecutar el proyecto desde el código)
+- MySQL Server instalado
+- Conexión a la base de datos configurada
+- .NET Framework compatible con la aplicación
+
+### Pasos de Instalación
+
+1. Descargar o clonar el repositorio del proyecto desde GitHub.
+
+2. Abrir el archivo de solución del proyecto:
+
+ Gestor de Horarios de Maestros.
+ 
+3. Instalar MySQL Server y crear la base de datos correspondiente al sistema.
+
+4. Configurar la conexión a la base de datos desde el menú **Conexión** dentro de la aplicación.
+
+5. Ejecutar el sistema presionando **F5** en Visual Studio o abriendo el archivo ejecutable del programa.
+
+### Ejecución del Sistema
+
+Una vez instalado y configurado, el sistema permitirá:
+
+- Gestionar horarios de maestros
+- Asignar materias
+- Buscar horarios
+- Modificar registros
+- Eliminar materias
+- Visualizar los horarios en la tabla principal
+
+### Consideraciones
+
+Se recomienda que el sistema sea instalado únicamente en computadoras autorizadas por la universidad para garantizar la seguridad de la información académica.
+
+También se recomienda realizar copias de seguridad periódicas de la base de datos.
+
+## Contribuciones:
 
 * Robert Avila (23-SISN-2-001): Se creo el programa base y se agrego la conexión con la base de datos, mas la opción de modificar esta conexión.
 * Wilfri de Morla (23-SISN-2-025): Se agrego la función de actualizar la tabla de datos.
@@ -12,3 +60,6 @@
 * Carlos Manuel Acosta Mota (23-EISN-2-025): Se agrego una fucion para validar horarios y evitar choches.
 * Hansel Reyes E (23-MISN-2-018): Se agrgeo la funcion de eliminar Materia.
 * Edward Blanko Suarez (23-SISN-2-010): Se modifico el formato de horas.
+* Oscar Starling (18-MISN-2-018) y Maycol Ariel Capellan (23-SISN-2-007): Se agrego la funcion de Imprimir.
+* Adrian Ruiz E. (22-MISN-2-006): Se cambio la interfaz a un modo oscuro.
+* Johan Daniel Muñoz (22-SISN-2-041): Se documentó el proceso de instalación del sistema Gestor de Horarios de Maestros.

@@ -1,11 +1,12 @@
 {
   "version": 2,
-  "dgSpecHash": "2d2UqngewSE=",
+  "dgSpecHash": "WXqd2DotSPs=",
   "success": true,
   "projectFilePath": "D:\\Folder\\Programar\\C#\\Proyecto-Final---Proyecto-y-Gobierno-de-TI\\Gestor de Horarios de Maestros\\Gestor de Horarios de Maestros.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\rober\\.nuget\\packages\\bouncycastle.cryptography\\2.6.2\\bouncycastle.cryptography.2.6.2.nupkg.sha512",
     "C:\\Users\\rober\\.nuget\\packages\\google.protobuf\\3.32.0\\google.protobuf.3.32.0.nupkg.sha512",
+    "C:\\Users\\rober\\.nuget\\packages\\itextsharp\\5.5.13.5\\itextsharp.5.5.13.5.nupkg.sha512",
     "C:\\Users\\rober\\.nuget\\packages\\k4os.compression.lz4\\1.3.8\\k4os.compression.lz4.1.3.8.nupkg.sha512",
     "C:\\Users\\rober\\.nuget\\packages\\k4os.compression.lz4.streams\\1.3.8\\k4os.compression.lz4.streams.1.3.8.nupkg.sha512",
     "C:\\Users\\rober\\.nuget\\packages\\k4os.hash.xxhash\\1.0.8\\k4os.hash.xxhash.1.0.8.nupkg.sha512",
@@ -32,6 +33,18 @@
       "libraryId": "System.Configuration.ConfigurationManager",
       "targetGraphs": [
         "net10.0-windows7.0"
+      ]
+    },
+    {
+      "code": "NU1701",
+      "level": "Warning",
+      "message": "El paquete \"iTextSharp 5.5.13.5\" se restauró con \".NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8, .NETFramework,Version=v4.8.1\" en lugar de la plataforma de destino del proyecto \"net10.0-windows7.0\". Puede que el paquete no sea totalmente compatible con el proyecto.",
+      "projectPath": "D:\\Folder\\Programar\\C#\\Proyecto-Final---Proyecto-y-Gobierno-de-TI\\Gestor de Horarios de Maestros\\Gestor de Horarios de Maestros.csproj",
+      "warningLevel": 1,
+      "filePath": "D:\\Folder\\Programar\\C#\\Proyecto-Final---Proyecto-y-Gobierno-de-TI\\Gestor de Horarios de Maestros\\Gestor de Horarios de Maestros.csproj",
+      "libraryId": "iTextSharp",
+      "targetGraphs": [
+        "net10.0-windows"
       ]
     }
   ]

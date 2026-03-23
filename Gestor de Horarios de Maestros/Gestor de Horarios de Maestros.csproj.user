@@ -16,6 +16,9 @@
     <Compile Update="FormBuscar.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Update="FormImprimir.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Update="FormModificar.cs">
       <SubType>Form</SubType>
     </Compile>
