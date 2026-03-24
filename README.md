@@ -63,3 +63,6 @@ También se recomienda realizar copias de seguridad periódicas de la base de da
 * Oscar Starling (18-MISN-2-018) y Maycol Ariel Capellan (23-SISN-2-007): Se agrego la funcion de Imprimir.
 * Adrian Ruiz E. (22-MISN-2-006): Se cambio la interfaz a un modo oscuro.
 * Johan Daniel Muñoz (22-SISN-2-041): Se documentó el proceso de instalación del sistema Gestor de Horarios de Maestros.
+* Miguel Ángel Jiménez (23-EISN-2-010): Se modifico la Base de Datos para agregar la Tabla de Cuatrimestre, tambien se modifico el Grid para mostrar el mismo y la funcion de Asignar para poder asignar un Cuatrimestre.
+* Correacciones: Se ajustaron las ventanas emergentes para que estas se centren automaticamente con la ventana principal, tambien se modifico el DataGridViwer para que se expandan las casillas segun el tamaño de la ventana.
+* Cambios: Se realizaron cambios como la barra de titulo personalizada y otros ajustez visuales menores.

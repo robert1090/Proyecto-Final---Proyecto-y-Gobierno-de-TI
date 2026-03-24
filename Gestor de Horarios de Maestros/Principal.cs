@@ -1,6 +1,7 @@
 using System.Data;
 using MySql.Data.MySqlClient;
 using System.Configuration;
+using System.Runtime.InteropServices;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
 using System.IO;
@@ -15,6 +16,17 @@ namespace Gestor_de_Horarios_de_Maestros
         public Principal()
         {
             InitializeComponent();
+
+            this.MaximizedBounds = Screen.FromHandle(this.Handle).WorkingArea;
+
+            Label miLabel = new Label();
+            miLabel.Text = "Gestor de Horarios - O&M: La Romana";
+            miLabel.ForeColor = Color.White; // Ajusta según tu diseño
+            miLabel.BackColor = Color.Transparent;
+            label1.Font = new System.Drawing.Font(label1.Font, FontStyle.Bold);
+            ToolStripControlHost host = new ToolStripControlHost(miLabel);
+            menuStrip2.Items.Add(host);
+
             // Suscribimos el evento para mejorar el formato de las horas
             this.dataGridView1.CellFormatting += new DataGridViewCellFormattingEventHandler(this.dataGridView1_CellFormatting);
         }
@@ -71,11 +83,19 @@ namespace Gestor_de_Horarios_de_Maestros
             {
                 using (MySqlConnection con = new MySqlConnection(connectionString))
                 {
-                    string query = @"SELECT MaestroNombre AS 'Docente', IdMateria AS 'ID', Nombre AS 'Materia', 
-                                     DiasImparte AS 'Días', Hora AS 'Hora', HD_Credito AS 'H/D Credito', 
-                                     DiasMes AS 'Días Mes', TotalCredito AS 'Total Credito', 
-                                     Inscritos AS 'Alum. Inscritos', Aula AS 'Aula', 
-                                     Seccion AS 'Sección', Credito AS 'Créditos' 
+                    string query = @"SELECT MaestroNombre AS 'Docente', 
+                                     IdMateria AS 'ID', 
+                                     MateriaNombre AS 'Materia',
+                                     Cuatrimestre AS 'Cuatrimestre',
+                                     DiasImparte AS 'Días', 
+                                     Hora AS 'Hora', 
+                                     HD_Credito AS 'H/D Credito', 
+                                     DiasMes AS 'Días Mes', 
+                                     TotalCredito AS 'Total Credito', 
+                                     Inscritos AS 'Alum. Inscritos', 
+                                     Aula AS 'Aula', 
+                                     Seccion AS 'Sección', 
+                                     Credito AS 'Créditos' 
                                      FROM HorariosView WHERE 1=1";
 
                     MySqlCommand cmd = new MySqlCommand();
@@ -101,6 +121,9 @@ namespace Gestor_de_Horarios_de_Maestros
                     DataTable dt = new DataTable();
                     da.Fill(dt);
                     dataGridView1.DataSource = dt;
+                    dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+                    dataGridView1.SelectionMode = DataGridViewSelectionMode.FullRowSelect; // Opcional: selecciona fila completa
+                    dataGridView1.AllowUserToOrderColumns = true; // Permite mover columnas
                 }
             }
             catch (MySqlException ex) { MessageBox.Show("Error de conexión: " + ex.Message); }
@@ -208,6 +231,49 @@ namespace Gestor_de_Horarios_de_Maestros
         private void imprimirToolStripMenuItem_Click(object sender, EventArgs e)
         {
             using (FormImprimir ventana = new FormImprimir()) { ventana.ShowDialog(); }
+        }
+
+        private void maximizarToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (this.WindowState == FormWindowState.Normal)
+            {
+                this.WindowState = FormWindowState.Maximized;
+            }
+            else
+            {
+                this.WindowState = FormWindowState.Normal;
+            }
+        }
+
+        private void minimizarToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.WindowState = FormWindowState.Minimized;
+        }
+
+        private void cerrarToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
+        }
+
+        [DllImport("user32.DLL", EntryPoint = "ReleaseCapture")]
+        private extern static void ReleaseCapture();
+
+        [DllImport("user32.DLL", EntryPoint = "SendMessage")]
+        private extern static void SendMessage(System.IntPtr hWnd, int wMsg, int wParam, int lParam);
+
+        private void MoverVentana()
+        {
+            ReleaseCapture();
+            SendMessage(this.Handle, 0x112, 0xf012, 0);
+        }
+        private void toolStrip1_MouseDown(object sender, MouseEventArgs e)
+        {
+            // Solo permitimos mover si se hace clic con el botón izquierdo
+            if (e.Button == MouseButtons.Left)
+            {
+                ReleaseCapture();
+                SendMessage(this.Handle, 0x112, 0xf012, 0);
+            }
         }
     }
 }

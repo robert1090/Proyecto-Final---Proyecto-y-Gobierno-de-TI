@@ -14,6 +14,7 @@ namespace Gestor_de_Horarios_de_Maestros
         {
             InitializeComponent();
             CargarDatos();
+            CargarCuatrimestres();
         }
 
         private void CargarDatos()
@@ -50,21 +51,54 @@ namespace Gestor_de_Horarios_de_Maestros
                 using (MySqlConnection con = new MySqlConnection(connectionString))
                 {
                     con.Open();
-                    // Actualizamos la materia existente para asignarle el ID del maestro elegido
-                    string query = "UPDATE Materias SET IdMaestro = @idM WHERE IdMateria = @idMat";
+
+                    string query = @"UPDATE Materias 
+                             SET IdMaestro = @idM,
+                                 IdCuatrimestre = @idC
+                             WHERE IdMateria = @idMat";
 
                     MySqlCommand cmd = new MySqlCommand(query, con);
+
                     cmd.Parameters.AddWithValue("@idM", cmbMaestros.SelectedValue);
                     cmd.Parameters.AddWithValue("@idMat", cmbMaterias.SelectedValue);
+                    cmd.Parameters.AddWithValue("@idC", cmbCuatrimestre.SelectedValue);
 
                     cmd.ExecuteNonQuery();
+
+                    MessageBox.Show("Asignación guardada correctamente");
+
                     this.DialogResult = DialogResult.OK;
                     this.Close();
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error al asignar: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Error al asignar: " + ex.Message);
+            }
+        }
+
+        private void CargarCuatrimestres()
+        {
+            try
+            {
+                using (MySqlConnection con = new MySqlConnection(connectionString))
+                {
+                    con.Open();
+
+                    MySqlDataAdapter da = new MySqlDataAdapter(
+                    "SELECT IdCuatrimestre, Nombre FROM Cuatrimestres", con);
+
+                    DataTable dt = new DataTable();
+                    da.Fill(dt);
+
+                    cmbCuatrimestre.DataSource = dt;
+                    cmbCuatrimestre.DisplayMember = "Nombre";
+                    cmbCuatrimestre.ValueMember = "IdCuatrimestre";
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error cargando cuatrimestres: " + ex.Message);
             }
         }
     }

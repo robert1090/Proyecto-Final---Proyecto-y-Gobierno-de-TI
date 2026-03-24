@@ -46,3 +46,4 @@ D:\Folder\Programar\C#\Proyecto-Final---Proyecto-y-Gobierno-de-TI\Gestor de Hora
 D:\Folder\Programar\C#\Proyecto-Final---Proyecto-y-Gobierno-de-TI\Gestor de Horarios de Maestros\obj\Debug\net10.0-windows\Gestor_de_Horarios_de_Maestros.FormAsignar.resources
 D:\Folder\Programar\C#\Proyecto-Final---Proyecto-y-Gobierno-de-TI\Gestor de Horarios de Maestros\obj\Debug\net10.0-windows\Gestor_de_Horarios_de_Maestros.FormImprimir.resources
 D:\Folder\Programar\C#\Proyecto-Final---Proyecto-y-Gobierno-de-TI\Gestor de Horarios de Maestros\bin\Debug\net10.0-windows\itextsharp.dll
+D:\Folder\Programar\C#\Proyecto-Final---Proyecto-y-Gobierno-de-TI\Gestor de Horarios de Maestros\obj\Debug\net10.0-windows\Gestor_de_Horarios_de_Maestros.Properties.Resources.resources

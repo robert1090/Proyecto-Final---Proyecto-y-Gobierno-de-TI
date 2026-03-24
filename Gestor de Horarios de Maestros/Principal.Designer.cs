@@ -17,141 +17,231 @@
 
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
-            this.menuStrip1 = new System.Windows.Forms.MenuStrip();
-            this.agregarToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.asignarToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.modificarToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.buscarToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.removerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.conexiónToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.actualizarToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.imprimirToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.panelFiltro = new System.Windows.Forms.Panel();
-            this.label1 = new System.Windows.Forms.Label();
-            this.comboBox1 = new System.Windows.Forms.ComboBox();
-            this.btnBuscar = new System.Windows.Forms.Button();
-            this.dataGridView1 = new System.Windows.Forms.DataGridView();
-            this.menuStrip1.SuspendLayout();
-            this.panelFiltro.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
-            this.SuspendLayout();
-
-            // ================= CONFIGURACIÓN BASE =================
-            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(36)))));
-            this.Font = new System.Drawing.Font("Segoe UI", 9F);
-            this.ClientSize = new System.Drawing.Size(950, 650);
-            this.Text = "🎓 Gestor de Horarios O&M";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Load += new System.EventHandler(this.Principal_Load);
-
-            // ================= MENUSTRIP MODERNO =================
-            this.menuStrip1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(48)))));
-            this.menuStrip1.ForeColor = System.Drawing.Color.White;
-            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.agregarToolStripMenuItem, this.asignarToolStripMenuItem, this.modificarToolStripMenuItem,
-            this.buscarToolStripMenuItem, this.removerToolStripMenuItem, this.conexiónToolStripMenuItem,
-            this.actualizarToolStripMenuItem, this.imprimirToolStripMenuItem});
-            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
-            this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(950, 24);
-            this.menuStrip1.TabIndex = 0;
-
-            // Items del Menú con Emojis
-            this.agregarToolStripMenuItem.Text = "➕ Agregar";
-            this.agregarToolStripMenuItem.Click += new System.EventHandler(this.agregarToolStripMenuItem_Click);
-
-            this.asignarToolStripMenuItem.Text = "📋 Asignar";
-            this.asignarToolStripMenuItem.Click += new System.EventHandler(this.asignarToolStripMenuItem_Click);
-
-            this.modificarToolStripMenuItem.Text = "✏️ Modificar";
-            this.modificarToolStripMenuItem.Click += new System.EventHandler(this.modificarToolStripMenuItem_Click);
-
-            this.buscarToolStripMenuItem.Text = "🔍 Buscar";
-            this.buscarToolStripMenuItem.Click += new System.EventHandler(this.buscarToolStripMenuItem_Click);
-
-            this.removerToolStripMenuItem.Text = "🗑️ Eliminar";
-            this.removerToolStripMenuItem.Click += new System.EventHandler(this.removerToolStripMenuItem_Click);
-
-            this.conexiónToolStripMenuItem.Text = "🔌 Conexión";
-            this.conexiónToolStripMenuItem.Click += new System.EventHandler(this.conexiónToolStripMenuItem_Click);
-
-            this.actualizarToolStripMenuItem.Text = "🔄 Actualizar";
-            this.actualizarToolStripMenuItem.Click += new System.EventHandler(this.actualizarToolStripMenuItem_Click);
-
-            this.imprimirToolStripMenuItem.Text = "🖨️ Imprimir";
-            this.imprimirToolStripMenuItem.Click += new System.EventHandler(this.imprimirToolStripMenuItem_Click);
-
-            // ================= PANEL FILTRO =================
-            this.panelFiltro.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(55)))), ((int)(((byte)(55)))), ((int)(((byte)(60)))));
-            this.panelFiltro.Controls.Add(this.label1);
-            this.panelFiltro.Controls.Add(this.comboBox1);
-            this.panelFiltro.Controls.Add(this.btnBuscar);
-            this.panelFiltro.Location = new System.Drawing.Point(12, 35);
-            this.panelFiltro.Name = "panelFiltro";
-            this.panelFiltro.Size = new System.Drawing.Size(926, 50);
-            this.panelFiltro.TabIndex = 1;
-
-            this.label1.Text = "Maestro:";
-            this.label1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(165)))), ((int)(((byte)(245)))));
-            this.label1.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold);
-            this.label1.Location = new System.Drawing.Point(20, 13);
-            this.label1.AutoSize = true;
-
-            this.comboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBox1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.comboBox1.Location = new System.Drawing.Point(145, 12);
-            this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(280, 28);
-            this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
-
-            this.btnBuscar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(165)))), ((int)(((byte)(245)))));
-            this.btnBuscar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnBuscar.ForeColor = System.Drawing.Color.White;
-            this.btnBuscar.Location = new System.Drawing.Point(435, 12);
-            this.btnBuscar.Name = "btnBuscar";
-            this.btnBuscar.Size = new System.Drawing.Size(100, 28);
-            this.btnBuscar.Text = "🔍 Buscar";
-            this.btnBuscar.Click += new System.EventHandler(this.btnBuscar_Click);
-
-            // ================= DATAGRIDVIEW PRO =================
-            this.dataGridView1.BackgroundColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(48)))));
-            this.dataGridView1.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.dataGridView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right)));
-            this.dataGridView1.EnableHeadersVisualStyles = false;
-
-            dataGridViewCellStyle1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(55)))), ((int)(((byte)(55)))), ((int)(((byte)(60)))));
-            dataGridViewCellStyle1.ForeColor = System.Drawing.Color.White;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-            this.dataGridView1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
-
-            dataGridViewCellStyle2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(48)))));
-            dataGridViewCellStyle2.ForeColor = System.Drawing.Color.White;
-            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(165)))), ((int)(((byte)(245)))));
-            this.dataGridView1.DefaultCellStyle = dataGridViewCellStyle2;
-
-            this.dataGridView1.Location = new System.Drawing.Point(12, 95);
-            this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.RowHeadersVisible = false;
-            this.dataGridView1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridView1.Size = new System.Drawing.Size(926, 540);
-
-            // ASIGNAR AL FORM
-            this.Controls.Add(this.dataGridView1);
-            this.Controls.Add(this.panelFiltro);
-            this.Controls.Add(this.menuStrip1);
-            this.MainMenuStrip = this.menuStrip1;
-            this.Name = "Principal";
-
-            this.menuStrip1.ResumeLayout(false);
-            this.menuStrip1.PerformLayout();
-            this.panelFiltro.ResumeLayout(false);
-            this.panelFiltro.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
-            this.ResumeLayout(false);
-            this.PerformLayout();
+            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Principal));
+            menuStrip1 = new MenuStrip();
+            agregarToolStripMenuItem = new ToolStripMenuItem();
+            asignarToolStripMenuItem = new ToolStripMenuItem();
+            modificarToolStripMenuItem = new ToolStripMenuItem();
+            buscarToolStripMenuItem = new ToolStripMenuItem();
+            removerToolStripMenuItem = new ToolStripMenuItem();
+            conexiónToolStripMenuItem = new ToolStripMenuItem();
+            actualizarToolStripMenuItem = new ToolStripMenuItem();
+            imprimirToolStripMenuItem = new ToolStripMenuItem();
+            panelFiltro = new Panel();
+            label1 = new Label();
+            comboBox1 = new ComboBox();
+            btnBuscar = new Button();
+            dataGridView1 = new DataGridView();
+            menuStrip2 = new MenuStrip();
+            cerrarToolStripMenuItem = new ToolStripMenuItem();
+            maximizarToolStripMenuItem = new ToolStripMenuItem();
+            minimizarToolStripMenuItem = new ToolStripMenuItem();
+            menuStrip1.SuspendLayout();
+            panelFiltro.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
+            menuStrip2.SuspendLayout();
+            SuspendLayout();
+            // 
+            // menuStrip1
+            // 
+            menuStrip1.BackColor = Color.FromArgb(45, 45, 48);
+            menuStrip1.ForeColor = Color.White;
+            menuStrip1.Items.AddRange(new ToolStripItem[] { agregarToolStripMenuItem, asignarToolStripMenuItem, modificarToolStripMenuItem, buscarToolStripMenuItem, removerToolStripMenuItem, conexiónToolStripMenuItem, actualizarToolStripMenuItem, imprimirToolStripMenuItem });
+            menuStrip1.Location = new Point(0, 24);
+            menuStrip1.Name = "menuStrip1";
+            menuStrip1.Size = new Size(950, 24);
+            menuStrip1.TabIndex = 0;
+            // 
+            // agregarToolStripMenuItem
+            // 
+            agregarToolStripMenuItem.Name = "agregarToolStripMenuItem";
+            agregarToolStripMenuItem.Size = new Size(76, 20);
+            agregarToolStripMenuItem.Text = "➕ Agregar";
+            agregarToolStripMenuItem.Click += agregarToolStripMenuItem_Click;
+            // 
+            // asignarToolStripMenuItem
+            // 
+            asignarToolStripMenuItem.Name = "asignarToolStripMenuItem";
+            asignarToolStripMenuItem.Size = new Size(74, 20);
+            asignarToolStripMenuItem.Text = "📋 Asignar";
+            asignarToolStripMenuItem.Click += asignarToolStripMenuItem_Click;
+            // 
+            // modificarToolStripMenuItem
+            // 
+            modificarToolStripMenuItem.Name = "modificarToolStripMenuItem";
+            modificarToolStripMenuItem.Size = new Size(85, 20);
+            modificarToolStripMenuItem.Text = "✏️ Modificar";
+            modificarToolStripMenuItem.Click += modificarToolStripMenuItem_Click;
+            // 
+            // buscarToolStripMenuItem
+            // 
+            buscarToolStripMenuItem.Name = "buscarToolStripMenuItem";
+            buscarToolStripMenuItem.Size = new Size(69, 20);
+            buscarToolStripMenuItem.Text = "🔍 Buscar";
+            buscarToolStripMenuItem.Click += buscarToolStripMenuItem_Click;
+            // 
+            // removerToolStripMenuItem
+            // 
+            removerToolStripMenuItem.Name = "removerToolStripMenuItem";
+            removerToolStripMenuItem.Size = new Size(77, 20);
+            removerToolStripMenuItem.Text = "🗑️ Eliminar";
+            removerToolStripMenuItem.Click += removerToolStripMenuItem_Click;
+            // 
+            // conexiónToolStripMenuItem
+            // 
+            conexiónToolStripMenuItem.Name = "conexiónToolStripMenuItem";
+            conexiónToolStripMenuItem.Size = new Size(84, 20);
+            conexiónToolStripMenuItem.Text = "🔌 Conexión";
+            conexiónToolStripMenuItem.Click += conexiónToolStripMenuItem_Click;
+            // 
+            // actualizarToolStripMenuItem
+            // 
+            actualizarToolStripMenuItem.Name = "actualizarToolStripMenuItem";
+            actualizarToolStripMenuItem.Size = new Size(86, 20);
+            actualizarToolStripMenuItem.Text = "🔄 Actualizar";
+            actualizarToolStripMenuItem.Click += actualizarToolStripMenuItem_Click;
+            // 
+            // imprimirToolStripMenuItem
+            // 
+            imprimirToolStripMenuItem.Name = "imprimirToolStripMenuItem";
+            imprimirToolStripMenuItem.Size = new Size(80, 20);
+            imprimirToolStripMenuItem.Text = "🖨️ Imprimir";
+            imprimirToolStripMenuItem.Click += imprimirToolStripMenuItem_Click;
+            // 
+            // panelFiltro
+            // 
+            panelFiltro.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            panelFiltro.BackColor = Color.FromArgb(55, 55, 60);
+            panelFiltro.Controls.Add(label1);
+            panelFiltro.Controls.Add(comboBox1);
+            panelFiltro.Controls.Add(btnBuscar);
+            panelFiltro.Location = new Point(12, 51);
+            panelFiltro.Name = "panelFiltro";
+            panelFiltro.Size = new Size(926, 50);
+            panelFiltro.TabIndex = 1;
+            // 
+            // label1
+            // 
+            label1.AutoSize = true;
+            label1.Font = new Font("Segoe UI", 11F, FontStyle.Bold);
+            label1.ForeColor = Color.FromArgb(66, 165, 245);
+            label1.Location = new Point(20, 13);
+            label1.Name = "label1";
+            label1.Size = new Size(71, 20);
+            label1.TabIndex = 0;
+            label1.Text = "Maestro:";
+            // 
+            // comboBox1
+            // 
+            comboBox1.DropDownStyle = ComboBoxStyle.DropDownList;
+            comboBox1.FlatStyle = FlatStyle.Flat;
+            comboBox1.Location = new Point(145, 12);
+            comboBox1.Name = "comboBox1";
+            comboBox1.Size = new Size(280, 23);
+            comboBox1.TabIndex = 1;
+            comboBox1.SelectedIndexChanged += comboBox1_SelectedIndexChanged;
+            // 
+            // btnBuscar
+            // 
+            btnBuscar.BackColor = Color.FromArgb(66, 165, 245);
+            btnBuscar.FlatStyle = FlatStyle.Flat;
+            btnBuscar.ForeColor = Color.White;
+            btnBuscar.Location = new Point(435, 12);
+            btnBuscar.Name = "btnBuscar";
+            btnBuscar.Size = new Size(100, 28);
+            btnBuscar.TabIndex = 2;
+            btnBuscar.Text = "🔍 Buscar";
+            btnBuscar.UseVisualStyleBackColor = false;
+            btnBuscar.Click += btnBuscar_Click;
+            // 
+            // dataGridView1
+            // 
+            dataGridView1.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            dataGridView1.BackgroundColor = Color.FromArgb(45, 45, 48);
+            dataGridView1.BorderStyle = BorderStyle.None;
+            dataGridViewCellStyle1.BackColor = Color.FromArgb(55, 55, 60);
+            dataGridViewCellStyle1.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            dataGridViewCellStyle1.ForeColor = Color.White;
+            dataGridView1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = Color.FromArgb(45, 45, 48);
+            dataGridViewCellStyle2.Font = new Font("Segoe UI", 9F);
+            dataGridViewCellStyle2.ForeColor = Color.White;
+            dataGridViewCellStyle2.SelectionBackColor = Color.FromArgb(66, 165, 245);
+            dataGridViewCellStyle2.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle2.WrapMode = DataGridViewTriState.False;
+            dataGridView1.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridView1.EnableHeadersVisualStyles = false;
+            dataGridView1.Location = new Point(12, 107);
+            dataGridView1.Name = "dataGridView1";
+            dataGridView1.RowHeadersVisible = false;
+            dataGridView1.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            dataGridView1.Size = new Size(926, 528);
+            dataGridView1.TabIndex = 0;
+            // 
+            // menuStrip2
+            // 
+            menuStrip2.BackColor = Color.FromArgb(20, 20, 20);
+            menuStrip2.Items.AddRange(new ToolStripItem[] { cerrarToolStripMenuItem, maximizarToolStripMenuItem, minimizarToolStripMenuItem });
+            menuStrip2.Location = new Point(0, 0);
+            menuStrip2.Name = "menuStrip2";
+            menuStrip2.Size = new Size(950, 24);
+            menuStrip2.TabIndex = 2;
+            menuStrip2.Text = "menuStrip2";
+            menuStrip2.DoubleClick += maximizarToolStripMenuItem_Click;
+            menuStrip2.MouseDown += toolStrip1_MouseDown;
+            // 
+            // cerrarToolStripMenuItem
+            // 
+            cerrarToolStripMenuItem.Alignment = ToolStripItemAlignment.Right;
+            cerrarToolStripMenuItem.Image = Properties.Resources.icon_icons__1_;
+            cerrarToolStripMenuItem.Name = "cerrarToolStripMenuItem";
+            cerrarToolStripMenuItem.Size = new Size(28, 20);
+            cerrarToolStripMenuItem.Click += cerrarToolStripMenuItem_Click;
+            // 
+            // maximizarToolStripMenuItem
+            // 
+            maximizarToolStripMenuItem.Alignment = ToolStripItemAlignment.Right;
+            maximizarToolStripMenuItem.Image = Properties.Resources.maximizethewindow_theapplication_maximizar_2873;
+            maximizarToolStripMenuItem.Name = "maximizarToolStripMenuItem";
+            maximizarToolStripMenuItem.Size = new Size(28, 20);
+            maximizarToolStripMenuItem.Click += maximizarToolStripMenuItem_Click;
+            // 
+            // minimizarToolStripMenuItem
+            // 
+            minimizarToolStripMenuItem.Alignment = ToolStripItemAlignment.Right;
+            minimizarToolStripMenuItem.Image = Properties.Resources.minimize_thewindow_theapplication_2872;
+            minimizarToolStripMenuItem.Name = "minimizarToolStripMenuItem";
+            minimizarToolStripMenuItem.Size = new Size(28, 20);
+            minimizarToolStripMenuItem.Click += minimizarToolStripMenuItem_Click;
+            // 
+            // Principal
+            // 
+            BackColor = Color.FromArgb(32, 32, 36);
+            ClientSize = new Size(950, 650);
+            Controls.Add(panelFiltro);
+            Controls.Add(dataGridView1);
+            Controls.Add(menuStrip1);
+            Controls.Add(menuStrip2);
+            Font = new Font("Segoe UI", 9F);
+            FormBorderStyle = FormBorderStyle.None;
+            Icon = (Icon)resources.GetObject("$this.Icon");
+            MainMenuStrip = menuStrip1;
+            Name = "Principal";
+            StartPosition = FormStartPosition.CenterScreen;
+            Text = "Gestor de Horarios - O&M";
+            Load += Principal_Load;
+            menuStrip1.ResumeLayout(false);
+            menuStrip1.PerformLayout();
+            panelFiltro.ResumeLayout(false);
+            panelFiltro.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
+            menuStrip2.ResumeLayout(false);
+            menuStrip2.PerformLayout();
+            ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
@@ -170,5 +260,9 @@
         private System.Windows.Forms.ComboBox comboBox1;
         private System.Windows.Forms.Button btnBuscar;
         private System.Windows.Forms.DataGridView dataGridView1;
+        private MenuStrip menuStrip2;
+        private ToolStripMenuItem maximizarToolStripMenuItem;
+        private ToolStripMenuItem minimizarToolStripMenuItem;
+        private ToolStripMenuItem cerrarToolStripMenuItem;
     }
 }

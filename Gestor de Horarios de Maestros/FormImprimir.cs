@@ -30,7 +30,7 @@ namespace Gestor_de_Horarios_de_Maestros
                 {
                     string query = @"SELECT 
                                 MaestroNombre AS 'Docente', 
-                                Nombre AS 'Materia', 
+                                MateriaNombre AS 'Materia', 
                                 Seccion AS 'Sección', 
                                 DiasImparte AS 'Días', 
                                 Hora AS 'Hora', 
