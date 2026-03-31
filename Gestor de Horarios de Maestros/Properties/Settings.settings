@@ -1,0 +1,9 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="Gestor_de_Horarios_de_Maestros.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="ModoConexion" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Remoto</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

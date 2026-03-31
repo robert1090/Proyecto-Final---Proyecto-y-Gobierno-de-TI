@@ -27,6 +27,7 @@
             buscarToolStripMenuItem = new ToolStripMenuItem();
             removerToolStripMenuItem = new ToolStripMenuItem();
             conexiónToolStripMenuItem = new ToolStripMenuItem();
+            localToolStripMenuItem = new ToolStripMenuItem();
             actualizarToolStripMenuItem = new ToolStripMenuItem();
             imprimirToolStripMenuItem = new ToolStripMenuItem();
             panelFiltro = new Panel();
@@ -48,7 +49,7 @@
             // 
             menuStrip1.BackColor = Color.FromArgb(45, 45, 48);
             menuStrip1.ForeColor = Color.White;
-            menuStrip1.Items.AddRange(new ToolStripItem[] { agregarToolStripMenuItem, asignarToolStripMenuItem, modificarToolStripMenuItem, buscarToolStripMenuItem, removerToolStripMenuItem, conexiónToolStripMenuItem, actualizarToolStripMenuItem, imprimirToolStripMenuItem });
+            menuStrip1.Items.AddRange(new ToolStripItem[] { agregarToolStripMenuItem, asignarToolStripMenuItem, modificarToolStripMenuItem, buscarToolStripMenuItem, removerToolStripMenuItem, conexiónToolStripMenuItem, localToolStripMenuItem, actualizarToolStripMenuItem, imprimirToolStripMenuItem });
             menuStrip1.Location = new Point(0, 24);
             menuStrip1.Name = "menuStrip1";
             menuStrip1.Size = new Size(950, 24);
@@ -95,6 +96,13 @@
             conexiónToolStripMenuItem.Size = new Size(84, 20);
             conexiónToolStripMenuItem.Text = "🔌 Conexión";
             conexiónToolStripMenuItem.Click += conexiónToolStripMenuItem_Click;
+            // 
+            // localToolStripMenuItem
+            // 
+            localToolStripMenuItem.Name = "localToolStripMenuItem";
+            localToolStripMenuItem.Size = new Size(59, 20);
+            localToolStripMenuItem.Text = "🖥️Local";
+            localToolStripMenuItem.Click += localToolStripMenuItem_Click;
             // 
             // actualizarToolStripMenuItem
             // 
@@ -180,6 +188,7 @@
             dataGridView1.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dataGridView1.Size = new Size(926, 528);
             dataGridView1.TabIndex = 0;
+            dataGridView1.CellContentClick += dataGridView1_CellContentClick;
             // 
             // menuStrip2
             // 
@@ -264,5 +273,6 @@
         private ToolStripMenuItem maximizarToolStripMenuItem;
         private ToolStripMenuItem minimizarToolStripMenuItem;
         private ToolStripMenuItem cerrarToolStripMenuItem;
+        private ToolStripMenuItem localToolStripMenuItem;
     }
 }

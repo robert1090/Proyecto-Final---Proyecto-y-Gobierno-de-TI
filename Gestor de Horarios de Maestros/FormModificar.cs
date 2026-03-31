@@ -1,14 +1,18 @@
 ﻿using System;
 using System.Configuration;
 using System.Windows.Forms;
+using System.Data;
+using System.Data.SQLite;
 using MySql.Data.MySqlClient;
-using System.Collections.Generic; // Necesario para List<>
+using System.Collections.Generic;
+using System.IO;
 
 namespace Gestor_de_Horarios_de_Maestros
 {
     public partial class FormModificar : Form
     {
-        string connectionString => ConfigurationManager.ConnectionStrings["MiConexion"].ConnectionString;
+        // Propiedad para detectar el modo de conexión
+        private bool ModoLocal => Properties.Settings.Default.ModoConexion == "Local";
 
         public FormModificar()
         {
@@ -16,22 +20,51 @@ namespace Gestor_de_Horarios_de_Maestros
             CargarCombosIniciales();
         }
 
+        // --- MÉTODOS DE CONEXIÓN HÍBRIDA ---
+
+        private IDbConnection CrearConexion()
+        {
+            if (ModoLocal)
+            {
+                string dbPath = Path.Combine(Application.StartupPath, "LocalData.db");
+                return new SQLiteConnection($"Data Source={dbPath};");
+            }
+            else
+            {
+                var settings = ConfigurationManager.ConnectionStrings["MiConexion"];
+                if (settings == null)
+                    throw new Exception("No se encontró la cadena de conexión 'MiConexion' en App.config.");
+                return new MySqlConnection(settings.ConnectionString);
+            }
+        }
+
+        private void CrearParametro(IDbCommand cmd, string nombre, object valor)
+        {
+            IDbDataParameter param = cmd.CreateParameter();
+            param.ParameterName = nombre;
+            param.Value = valor ?? DBNull.Value;
+            cmd.Parameters.Add(param);
+        }
+
+        // --- LÓGICA DE CARGA ---
+
         private void CargarCombosIniciales()
         {
-            CargarComboMaestros(cmbMaestros);      // Combo de la pestaña Maestro
-            CargarComboMaestros(cmbMaestroAsoc);  // Combo dentro de la pestaña Materia
-            CargarComboMaterias();                 // Combo selector de materia
+            CargarComboMaestros(cmbMaestros);
+            CargarComboMaestros(cmbMaestroAsoc);
+            CargarComboMaterias();
         }
 
         private void CargarComboMaestros(ComboBox cb)
         {
             try
             {
-                using (MySqlConnection con = new MySqlConnection(connectionString))
+                using (IDbConnection con = CrearConexion())
                 {
                     con.Open();
-                    MySqlCommand cmd = new MySqlCommand("SELECT IdMaestro, Nombre FROM Maestros ORDER BY Nombre", con);
-                    using (MySqlDataReader r = cmd.ExecuteReader())
+                    IDbCommand cmd = con.CreateCommand();
+                    cmd.CommandText = "SELECT IdMaestro, Nombre FROM Maestros ORDER BY Nombre";
+                    using (IDataReader r = cmd.ExecuteReader())
                     {
                         cb.Items.Clear();
                         while (r.Read()) cb.Items.Add(new ComboItem(r.GetInt32(0), r.GetString(1)));
@@ -45,12 +78,12 @@ namespace Gestor_de_Horarios_de_Maestros
         {
             try
             {
-                using (MySqlConnection con = new MySqlConnection(connectionString))
+                using (IDbConnection con = CrearConexion())
                 {
                     con.Open();
-                    string sql = "SELECT IdMateria, Nombre FROM Materias ORDER BY Nombre";
-                    MySqlCommand cmd = new MySqlCommand(sql, con);
-                    using (MySqlDataReader r = cmd.ExecuteReader())
+                    IDbCommand cmd = con.CreateCommand();
+                    cmd.CommandText = "SELECT IdMateria, Nombre FROM Materias ORDER BY Nombre";
+                    using (IDataReader r = cmd.ExecuteReader())
                     {
                         cmbMaterias.Items.Clear();
                         while (r.Read()) cmbMaterias.Items.Add(new ComboItem(r.GetInt32(0), r.GetString(1)));
@@ -60,44 +93,33 @@ namespace Gestor_de_Horarios_de_Maestros
             catch (Exception ex) { MessageBox.Show("Error materias: " + ex.Message); }
         }
 
-        // --- MÉTODO PARA OBTENER DATOS DE VALIDACIÓN ---
         private List<HorarioSimple> ObtenerHorariosExistentes(int idMateriaActual)
         {
             List<HorarioSimple> lista = new List<HorarioSimple>();
             try
             {
-                using (MySqlConnection con = new MySqlConnection(connectionString))
+                using (IDbConnection con = CrearConexion())
                 {
                     con.Open();
-                    string query = @"SELECT t2.Nombre as Maestro, t1.DiasImparte, t1.Hora 
-                             FROM Materias t1 
-                             INNER JOIN Maestros t2 ON t1.IdMaestro = t2.IdMaestro
-                             WHERE t1.IdMateria != @idActual";
+                    IDbCommand cmd = con.CreateCommand();
+                    cmd.CommandText = @"SELECT t2.Nombre as Maestro, t1.DiasImparte, t1.Hora 
+                                     FROM Materias t1 
+                                     INNER JOIN Maestros t2 ON t1.IdMaestro = t2.IdMaestro
+                                     WHERE t1.IdMateria != @idActual";
+                    CrearParametro(cmd, "@idActual", idMateriaActual);
 
-                    MySqlCommand cmd = new MySqlCommand(query, con);
-                    cmd.Parameters.AddWithValue("@idActual", idMateriaActual);
-
-                    using (MySqlDataReader r = cmd.ExecuteReader())
+                    using (IDataReader r = cmd.ExecuteReader())
                     {
                         while (r.Read())
                         {
-                            // LÓGICA NUEVA: Manejar formato "08:00 - 10:00" o "08:00:00"
                             string horaDb = r["Hora"].ToString();
                             int horaI = 0;
-
                             try
                             {
-                                if (horaDb.Contains("-"))
-                                {
-                                    // Extrae la primera parte del rango
-                                    horaI = TimeSpan.Parse(horaDb.Split('-')[0].Trim()).Hours;
-                                }
-                                else
-                                {
-                                    horaI = TimeSpan.Parse(horaDb).Hours;
-                                }
+                                string parte = horaDb.Contains("-") ? horaDb.Split('-')[0].Trim() : horaDb.Trim();
+                                horaI = TimeSpan.Parse(parte).Hours;
                             }
-                            catch { /* Si el formato es inválido, se ignora esa fila */ }
+                            catch { }
 
                             lista.Add(new HorarioSimple
                             {
@@ -110,7 +132,7 @@ namespace Gestor_de_Horarios_de_Maestros
                     }
                 }
             }
-            catch (Exception ex) { MessageBox.Show("Error al cargar lista de validación: " + ex.Message); }
+            catch (Exception ex) { MessageBox.Show("Error validación: " + ex.Message); }
             return lista;
         }
 
@@ -119,13 +141,14 @@ namespace Gestor_de_Horarios_de_Maestros
             if (!(cmbMaterias.SelectedItem is ComboItem item)) return;
             try
             {
-                using (MySqlConnection con = new MySqlConnection(connectionString))
+                using (IDbConnection con = CrearConexion())
                 {
                     con.Open();
-                    string sql = "SELECT * FROM Materias WHERE IdMateria = @id";
-                    MySqlCommand cmd = new MySqlCommand(sql, con);
-                    cmd.Parameters.AddWithValue("@id", item.Id);
-                    using (MySqlDataReader r = cmd.ExecuteReader())
+                    IDbCommand cmd = con.CreateCommand();
+                    cmd.CommandText = "SELECT * FROM Materias WHERE IdMateria = @id";
+                    CrearParametro(cmd, "@id", item.Id);
+
+                    using (IDataReader r = cmd.ExecuteReader())
                     {
                         if (r.Read())
                         {
@@ -164,12 +187,13 @@ namespace Gestor_de_Horarios_de_Maestros
             if (!(cmbMaestros.SelectedItem is ComboItem item)) return;
             try
             {
-                using (MySqlConnection con = new MySqlConnection(connectionString))
+                using (IDbConnection con = CrearConexion())
                 {
                     con.Open();
-                    MySqlCommand cmd = new MySqlCommand("UPDATE Maestros SET Nombre=@n WHERE IdMaestro=@id", con);
-                    cmd.Parameters.AddWithValue("@n", txtNuevoNombre.Text.Trim());
-                    cmd.Parameters.AddWithValue("@id", item.Id);
+                    IDbCommand cmd = con.CreateCommand();
+                    cmd.CommandText = "UPDATE Maestros SET Nombre=@n WHERE IdMaestro=@id";
+                    CrearParametro(cmd, "@n", txtNuevoNombre.Text.Trim());
+                    CrearParametro(cmd, "@id", item.Id);
                     cmd.ExecuteNonQuery();
                     MessageBox.Show("Maestro actualizado.");
                     CargarCombosIniciales();
@@ -182,16 +206,10 @@ namespace Gestor_de_Horarios_de_Maestros
         {
             if (!(cmbMaterias.SelectedItem is ComboItem selector) || !(cmbMaestroAsoc.SelectedItem is ComboItem maestro)) return;
 
-            // --- VALIDACIÓN DE CHOQUE CORREGIDA ---
             try
             {
                 List<HorarioSimple> listaHorarios = ObtenerHorariosExistentes(selector.Id);
-
-                // LÓGICA NUEVA: Extraer solo la hora de inicio del TextBox para la validación
-                string horaTexto = txtHora.Text.Contains("-")
-                                   ? txtHora.Text.Split('-')[0].Trim()
-                                   : txtHora.Text.Trim();
-
+                string horaTexto = txtHora.Text.Contains("-") ? txtHora.Text.Split('-')[0].Trim() : txtHora.Text.Trim();
                 int horaDigitada = TimeSpan.Parse(horaTexto).Hours;
 
                 var nuevo = new HorarioSimple
@@ -207,37 +225,28 @@ namespace Gestor_de_Horarios_de_Maestros
                     MessageBox.Show(mensaje, "Choque de horario", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
-            }
-            catch
-            {
-                MessageBox.Show("Asegúrese de que la hora inicial sea válida (ej. 08:00 o 08:00 - 10:00).");
-                return;
-            }
 
-            // --- PROCESO DE ACTUALIZACIÓN (Se mantiene igual, ahora acepta VARCHAR) ---
-            try
-            {
-                using (MySqlConnection con = new MySqlConnection(connectionString))
+                using (IDbConnection con = CrearConexion())
                 {
                     con.Open();
-                    string sql = @"UPDATE Materias SET IdMateria=@newId, IdMaestro=@idM, Nombre=@nom, DiasImparte=@d, 
-                           Hora=@h, HD_Credito=@hd, DiasMes=@dm, TotalCredito=@tot, Inscritos=@ins, 
-                           Aula=@a, Seccion=@s, Credito=@c WHERE IdMateria=@oldId";
+                    IDbCommand cmd = con.CreateCommand();
+                    cmd.CommandText = @"UPDATE Materias SET IdMateria=@newId, IdMaestro=@idM, Nombre=@nom, DiasImparte=@d, 
+                                       Hora=@h, HD_Credito=@hd, DiasMes=@dm, TotalCredito=@tot, Inscritos=@ins, 
+                                       Aula=@a, Seccion=@s, Credito=@c WHERE IdMateria=@oldId";
 
-                    MySqlCommand cmd = new MySqlCommand(sql, con);
-                    cmd.Parameters.AddWithValue("@newId", txtIdMateria.Text);
-                    cmd.Parameters.AddWithValue("@idM", maestro.Id);
-                    cmd.Parameters.AddWithValue("@nom", txtNombreM.Text);
-                    cmd.Parameters.AddWithValue("@d", txtDias.Text);
-                    cmd.Parameters.AddWithValue("@h", txtHora.Text.Trim()); // Guarda el texto completo (ej. "08:00 - 10:00")
-                    cmd.Parameters.AddWithValue("@hd", ParseInt(txtHDCredito.Text));
-                    cmd.Parameters.AddWithValue("@dm", ParseInt(txtDiasMes.Text));
-                    cmd.Parameters.AddWithValue("@tot", ParseInt(txtTotalCredito.Text));
-                    cmd.Parameters.AddWithValue("@ins", ParseInt(txtInscritos.Text));
-                    cmd.Parameters.AddWithValue("@a", txtAula.Text);
-                    cmd.Parameters.AddWithValue("@s", txtSeccion.Text);
-                    cmd.Parameters.AddWithValue("@c", ParseInt(txtCredito.Text));
-                    cmd.Parameters.AddWithValue("@oldId", selector.Id);
+                    CrearParametro(cmd, "@newId", txtIdMateria.Text);
+                    CrearParametro(cmd, "@idM", maestro.Id);
+                    CrearParametro(cmd, "@nom", txtNombreM.Text);
+                    CrearParametro(cmd, "@d", txtDias.Text);
+                    CrearParametro(cmd, "@h", txtHora.Text.Trim());
+                    CrearParametro(cmd, "@hd", ParseInt(txtHDCredito.Text));
+                    CrearParametro(cmd, "@dm", ParseInt(txtDiasMes.Text));
+                    CrearParametro(cmd, "@tot", ParseInt(txtTotalCredito.Text));
+                    CrearParametro(cmd, "@ins", ParseInt(txtInscritos.Text));
+                    CrearParametro(cmd, "@a", txtAula.Text);
+                    CrearParametro(cmd, "@s", txtSeccion.Text);
+                    CrearParametro(cmd, "@c", ParseInt(txtCredito.Text));
+                    CrearParametro(cmd, "@oldId", selector.Id);
 
                     cmd.ExecuteNonQuery();
                     MessageBox.Show("Materia actualizada correctamente.");

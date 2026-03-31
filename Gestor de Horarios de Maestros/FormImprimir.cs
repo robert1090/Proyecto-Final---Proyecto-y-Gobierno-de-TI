@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
-using System.Text;
-using System.Windows.Forms;
+using System.Data.Common; // Necesario para DbDataAdapter
+using System.Data.SQLite;
 using MySql.Data.MySqlClient;
 using System.Configuration;
 using System.IO;
+using System.Windows.Forms;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
 
@@ -15,21 +14,52 @@ namespace Gestor_de_Horarios_de_Maestros
 {
     public partial class FormImprimir : Form
     {
-        string connectionString => ConfigurationManager.ConnectionStrings["MiConexion"].ConnectionString;
+        // Detecta el modo de conexión
+        private bool ModoLocal => Properties.Settings.Default.ModoConexion == "Local";
 
         public FormImprimir()
         {
             InitializeComponent();
         }
 
+        // --- MÉTODOS DE CONEXIÓN HÍBRIDA ---
+
+        private IDbConnection CrearConexion()
+        {
+            if (ModoLocal)
+            {
+                string dbPath = Path.Combine(Application.StartupPath, "LocalData.db");
+                return new SQLiteConnection($"Data Source={dbPath};");
+            }
+            else
+            {
+                var settings = ConfigurationManager.ConnectionStrings["MiConexion"];
+                if (settings == null)
+                    throw new Exception("No se encontró la cadena de conexión 'MiConexion' en App.config.");
+
+                return new MySqlConnection(settings.ConnectionString);
+            }
+        }
+
+        private void CrearParametro(IDbCommand cmd, string nombre, object valor)
+        {
+            IDbDataParameter param = cmd.CreateParameter();
+            param.ParameterName = nombre;
+            param.Value = valor ?? DBNull.Value;
+            cmd.Parameters.Add(param);
+        }
+
+        // --- LÓGICA DE DATOS ---
+
         private void CargarDatosParaReporte(string filtroMaestro = "")
         {
             try
             {
-                using (MySqlConnection con = new MySqlConnection(connectionString))
+                using (IDbConnection con = CrearConexion())
                 {
                     string query = @"SELECT 
                                 MaestroNombre AS 'Docente', 
+                                IdMateria AS 'ID',
                                 MateriaNombre AS 'Materia', 
                                 Seccion AS 'Sección', 
                                 DiasImparte AS 'Días', 
@@ -37,25 +67,30 @@ namespace Gestor_de_Horarios_de_Maestros
                                 Aula AS 'Aula'
                              FROM HorariosView WHERE 1=1";
 
-                    MySqlCommand cmd = new MySqlCommand();
+                    IDbCommand cmd = con.CreateCommand();
                     cmd.Connection = con;
 
                     if (!string.IsNullOrEmpty(filtroMaestro) && filtroMaestro != "Todo")
                     {
                         query += " AND MaestroNombre LIKE @nombre";
-                        cmd.Parameters.AddWithValue("@nombre", "%" + filtroMaestro + "%");
+                        CrearParametro(cmd, "@nombre", "%" + filtroMaestro + "%");
                     }
 
                     query += " ORDER BY MaestroNombre ASC";
                     cmd.CommandText = query;
 
-                    MySqlDataAdapter da = new MySqlDataAdapter(cmd);
+                    // Adaptador universal para llenar el DataTable
                     DataTable dt = new DataTable();
-                    da.Fill(dt);
+                    con.Open();
+                    using (IDataReader reader = cmd.ExecuteReader())
+                    {
+                        dt.Load(reader);
+                    }
                     dataGridView1.DataSource = dt;
+                    dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
                 }
             }
-            catch (MySqlException ex)
+            catch (Exception ex)
             {
                 MessageBox.Show("Error al cargar datos para el reporte: " + ex.Message);
             }
@@ -65,12 +100,17 @@ namespace Gestor_de_Horarios_de_Maestros
         {
             try
             {
-                using (MySqlConnection con = new MySqlConnection(connectionString))
+                using (IDbConnection con = CrearConexion())
                 {
-                    string query = "SELECT DISTINCT MaestroNombre FROM HorariosView ORDER BY MaestroNombre ASC";
-                    MySqlDataAdapter da = new MySqlDataAdapter(query, con);
+                    con.Open();
+                    IDbCommand cmd = con.CreateCommand();
+                    cmd.CommandText = "SELECT DISTINCT MaestroNombre FROM HorariosView ORDER BY MaestroNombre ASC";
+
                     DataTable dt = new DataTable();
-                    da.Fill(dt);
+                    using (IDataReader reader = cmd.ExecuteReader())
+                    {
+                        dt.Load(reader);
+                    }
 
                     comboBox1.Items.Clear();
                     comboBox1.Items.Add("Todo");
@@ -81,8 +121,10 @@ namespace Gestor_de_Horarios_de_Maestros
                     comboBox1.SelectedIndex = 0;
                 }
             }
-            catch { }
+            catch (Exception ex) { /* Manejo silencioso o log */ }
         }
+
+        // --- EXPORTACIÓN A PDF ---
 
         private void button1_Click(object sender, EventArgs e)
         {
@@ -99,18 +141,24 @@ namespace Gestor_de_Horarios_de_Maestros
                         Document pdfDoc = new Document(PageSize.A4, 10f, 10f, 10f, 0f);
                         PdfWriter.GetInstance(pdfDoc, new FileStream(guardar.FileName, FileMode.Create));
                         pdfDoc.Open();
-                        pdfDoc.Add(new Paragraph("Reporte del Gestor de Horarios Universitario\n\n"));
+
+                        // Encabezado
+                        var fuenteTitulo = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 14);
+                        pdfDoc.Add(new Paragraph("Reporte del Gestor de Horarios Universitario", fuenteTitulo));
+                        pdfDoc.Add(new Paragraph($"Fecha de generación: {DateTime.Now:dd/MM/yyyy HH:mm}\n\n"));
 
                         PdfPTable pdfTable = new PdfPTable(dataGridView1.Columns.Count);
                         pdfTable.WidthPercentage = 100;
 
+                        // Cabeceras de la tabla
                         foreach (DataGridViewColumn column in dataGridView1.Columns)
                         {
                             PdfPCell cell = new PdfPCell(new Phrase(column.HeaderText));
-                            cell.BackgroundColor = new iTextSharp.text.BaseColor(240, 240, 240);
+                            cell.BackgroundColor = new BaseColor(240, 240, 240);
                             pdfTable.AddCell(cell);
                         }
 
+                        // Filas de la tabla
                         foreach (DataGridViewRow row in dataGridView1.Rows)
                         {
                             if (!row.IsNewRow)
@@ -138,14 +186,18 @@ namespace Gestor_de_Horarios_de_Maestros
             }
         }
 
+        // --- EVENTOS DEL FORMULARIO ---
+
         private void FormImprimir_Load(object sender, EventArgs e)
         {
-            LlenarFiltros(); // Importante: Llenamos el combo primero
-            CargarDatosParaReporte(""); // Luego cargamos la tabla
+            LlenarFiltros();
+            CargarDatosParaReporte("");
         }
 
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
+            if (comboBox1.SelectedItem == null) return;
+
             string seleccion = comboBox1.SelectedItem.ToString();
             if (seleccion == "Todo")
             {

@@ -1,20 +1,40 @@
-using System.Data;
-using MySql.Data.MySqlClient;
-using System.Configuration;
-using System.Runtime.InteropServices;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
+using MySql.Data.MySqlClient;
+using System.Configuration;
+using System.Data;
+using System.Data.Common;
+using System.Data.SQLite;
 using System.IO;
+using System.Runtime.InteropServices;
 
 namespace Gestor_de_Horarios_de_Maestros
 {
     public partial class Principal : Form
     {
+
+        private bool ModoLocal = false;
+
         // Propiedad para la conexión (Evaluada cada vez que se usa)
-        string connectionString => ConfigurationManager.ConnectionStrings["MiConexion"]?.ConnectionString;
+        string connectionString
+        {
+            get
+            {
+                string nombreConexion = ModoLocal ? "BaseLocal" : "MiConexion";
+                var config = ConfigurationManager.ConnectionStrings[nombreConexion];
+
+                if (config == null)
+                {
+                    // Fallback por si una de las dos no existe aún en el config
+                    return ConfigurationManager.ConnectionStrings["MiConexion"]?.ConnectionString;
+                }
+                return config.ConnectionString;
+            }
+        }
 
         public Principal()
         {
+            CargarResolverSQLite();
             InitializeComponent();
 
             this.MaximizedBounds = Screen.FromHandle(this.Handle).WorkingArea;
@@ -31,9 +51,62 @@ namespace Gestor_de_Horarios_de_Maestros
             this.dataGridView1.CellFormatting += new DataGridViewCellFormattingEventHandler(this.dataGridView1_CellFormatting);
         }
 
+        private void CargarResolverSQLite()
+        {
+            string rPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory,
+                                        Environment.Is64BitProcess ? "x64" : "x86",
+                                        "SQLite.Interop.dll");
+
+            if (File.Exists(rPath))
+            {
+                // Esto le dice a Windows dónde está el "puente" de SQLite exactamente
+                LoadLibrary(rPath);
+            }
+        }
+
+        [DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
+        private static extern IntPtr LoadLibrary(string lpFileName);
+
+        private IDbConnection CrearConexion()
+        {
+            if (ModoLocal)
+            {
+                string dbPath = Path.Combine(Application.StartupPath, "LocalData.db");
+                // Quitamos "Version=3" si da problemas, usualmente solo "Data Source=" basta
+                return new SQLiteConnection($"Data Source={dbPath};");
+            }
+            else
+            {
+                string remoteString = ConfigurationManager.ConnectionStrings["MiConexion"]?.ConnectionString;
+                return new MySqlConnection(remoteString);
+            }
+        }
+
+        private DbDataAdapter CrearAdapter(string query, IDbConnection con)
+        {
+            if (ModoLocal)
+                return new SQLiteDataAdapter(query, (SQLiteConnection)con);
+            else
+                return new MySqlDataAdapter(query, (MySqlConnection)con);
+        }
+
         private void Principal_Load(object sender, EventArgs e)
         {
+            // Intentamos asegurar que la BD local exista siempre
+            InicializarBaseDeDatosLocal();
+
+            // Recuperamos el modo guardado (como hicimos en el paso anterior)
+            string modoGuardado = Properties.Settings.Default.ModoConexion;
+            ModoLocal = (modoGuardado == "Local");
+
+            ConfigurarInterfazSegunModo();
             ActualizarTodo();
+        }
+
+        private void ConfigurarInterfazSegunModo()
+        {
+            localToolStripMenuItem.Checked = ModoLocal;
+            localToolStripMenuItem.Text = ModoLocal ? "🌐 Cambiar a Remota" : "💻 Cambiar a Local";
         }
 
         private void ActualizarTodo()
@@ -50,6 +123,83 @@ namespace Gestor_de_Horarios_de_Maestros
             }
         }
 
+        private void InicializarBaseDeDatosLocal()
+        {
+            string dbPath = Path.Combine(Application.StartupPath, "LocalData.db");
+
+            // Si el archivo no existe, SQLite lo crea automáticamente al abrir la conexión
+            string connectionStringLocal = $"Data Source={dbPath};Version=3;";
+
+            using (SQLiteConnection con = new SQLiteConnection(connectionStringLocal))
+            {
+                try
+                {
+                    con.Open();
+                    SQLiteCommand cmd = con.CreateCommand();
+
+                    // 1. Tabla: Maestros
+                    // En SQLite, INTEGER PRIMARY KEY ya implica auto-incremento automático
+                    cmd.CommandText = @"CREATE TABLE IF NOT EXISTS Maestros (
+                    IdMaestro INTEGER PRIMARY KEY, 
+                    Nombre TEXT NOT NULL
+                  );";
+                    cmd.ExecuteNonQuery();
+
+                    cmd.CommandText = @"CREATE TABLE IF NOT EXISTS Cuatrimestres (
+                    IdCuatrimestre INTEGER PRIMARY KEY,
+                    Nombre TEXT NOT NULL,
+                    FechaInicio TEXT,
+                    FechaFin TEXT
+                  );";
+                    cmd.ExecuteNonQuery();
+
+                    cmd.CommandText = @"CREATE TABLE IF NOT EXISTS Materias (
+                    IdMateria INTEGER PRIMARY KEY,
+                    Nombre TEXT NOT NULL,
+                    DiasImparte TEXT,
+                    Hora TEXT,
+                    HD_Credito INTEGER,
+                    DiasMes INTEGER,
+                    TotalCredito INTEGER,
+                    Inscritos INTEGER,
+                    Aula TEXT,
+                    Seccion TEXT,
+                    Credito INTEGER,
+                    IdMaestro INTEGER,
+                    IdCuatrimestre INTEGER,
+                    FOREIGN KEY (IdMaestro) REFERENCES Maestros (IdMaestro),
+                    FOREIGN KEY (IdCuatrimestre) REFERENCES Cuatrimestres (IdCuatrimestre)
+                  );";
+                    cmd.ExecuteNonQuery();
+
+                    // 4. Vista: HorariosView (SQLite también soporta vistas)
+                    cmd.CommandText = @"CREATE VIEW IF NOT EXISTS HorariosView AS
+                                SELECT 
+                                    m.Nombre AS MaestroNombre,
+                                    mat.IdMateria,
+                                    mat.Nombre AS MateriaNombre,
+                                    c.Nombre AS Cuatrimestre,
+                                    mat.DiasImparte,
+                                    mat.Hora,
+                                    mat.HD_Credito,
+                                    mat.DiasMes,
+                                    mat.TotalCredito,
+                                    mat.Inscritos,
+                                    mat.Aula,
+                                    mat.Seccion,
+                                    mat.Credito
+                                FROM Materias mat
+                                INNER JOIN Maestros m ON mat.IdMaestro = m.IdMaestro
+                                LEFT JOIN Cuatrimestres c ON mat.IdCuatrimestre = c.IdCuatrimestre;";
+                    cmd.ExecuteNonQuery();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Error al crear base de datos portátil: " + ex.Message);
+                }
+            }
+        }
+
         private void CargarComboMaestros()
         {
             DataTable dt = new DataTable();
@@ -58,18 +208,22 @@ namespace Gestor_de_Horarios_de_Maestros
 
             try
             {
-                using (MySqlConnection con = new MySqlConnection(connectionString))
+                using (IDbConnection con = CrearConexion())
                 {
                     string query = "SELECT IdMaestro, Nombre FROM Maestros ORDER BY Nombre ASC";
-                    MySqlDataAdapter da = new MySqlDataAdapter(query, con);
-                    da.Fill(dt);
+                    IDataAdapter da = CrearAdapter(query, con);
+                    if (da is SQLiteDataAdapter sda) sda.Fill(dt);
+                    else if (da is MySqlDataAdapter mda) mda.Fill(dt);
                 }
             }
-            catch { /* Si falla, el DT queda vacío para el "Todos" */ }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error al cargar maestros: " + ex.Message);
+            }
 
             DataRow filaTodos = dt.NewRow();
             filaTodos["IdMaestro"] = 0;
-            filaTodos["Nombre"] = "👥 Todos"; // Ajustado para el nuevo diseño
+            filaTodos["Nombre"] = "👥 Todos";
             dt.Rows.InsertAt(filaTodos, 0);
 
             comboBox1.DataSource = dt;
@@ -81,52 +235,64 @@ namespace Gestor_de_Horarios_de_Maestros
         {
             try
             {
-                using (MySqlConnection con = new MySqlConnection(connectionString))
+                using (IDbConnection con = CrearConexion()) // <--- CAMBIO: Genérico
                 {
                     string query = @"SELECT MaestroNombre AS 'Docente', 
-                                     IdMateria AS 'ID', 
-                                     MateriaNombre AS 'Materia',
-                                     Cuatrimestre AS 'Cuatrimestre',
-                                     DiasImparte AS 'Días', 
-                                     Hora AS 'Hora', 
-                                     HD_Credito AS 'H/D Credito', 
-                                     DiasMes AS 'Días Mes', 
-                                     TotalCredito AS 'Total Credito', 
-                                     Inscritos AS 'Alum. Inscritos', 
-                                     Aula AS 'Aula', 
-                                     Seccion AS 'Sección', 
-                                     Credito AS 'Créditos' 
-                                     FROM HorariosView WHERE 1=1";
+                             IdMateria AS 'ID', 
+                             MateriaNombre AS 'Materia',
+                             Cuatrimestre AS 'Cuatrimestre',
+                             DiasImparte AS 'Días', 
+                             Hora AS 'Hora', 
+                             HD_Credito AS 'H/D Credito', 
+                             DiasMes AS 'Días Mes', 
+                             TotalCredito AS 'Total Credito', 
+                             Inscritos AS 'Alum. Inscritos', 
+                             Aula AS 'Aula', 
+                             Seccion AS 'Sección', 
+                             Credito AS 'Créditos' 
+                             FROM HorariosView WHERE 1=1";
 
-                    MySqlCommand cmd = new MySqlCommand();
+                    // Usamos el comando según la conexión activa
+                    IDbCommand cmd = con.CreateCommand();
                     cmd.Connection = con;
 
-                    // Filtro de Maestro (Ignora el emoji y "Todos")
                     if (!string.IsNullOrEmpty(nombreMaestro) && !nombreMaestro.Contains("Todos") && !nombreMaestro.Contains("DataRowView"))
                     {
                         query += " AND MaestroNombre LIKE @nombre";
-                        cmd.Parameters.AddWithValue("@nombre", "%" + nombreMaestro + "%");
+                        CrearParametro(cmd, "@nombre", "%" + nombreMaestro + "%");
                     }
 
-                    // Filtros adicionales del PDF
-                    if (!string.IsNullOrEmpty(seccion)) { query += " AND Seccion LIKE @seccion"; cmd.Parameters.AddWithValue("@seccion", "%" + seccion + "%"); }
-                    if (!string.IsNullOrEmpty(dia)) { query += " AND DiasImparte LIKE @dia"; cmd.Parameters.AddWithValue("@dia", "%" + dia + "%"); }
-                    if (!string.IsNullOrEmpty(credito)) { query += " AND Credito = @credito"; cmd.Parameters.AddWithValue("@credito", credito); }
-                    if (!string.IsNullOrEmpty(hora)) { query += " AND Hora LIKE @hora"; cmd.Parameters.AddWithValue("@hora", "%" + hora + "%"); }
+                    if (!string.IsNullOrEmpty(seccion)) { query += " AND Seccion LIKE @seccion"; CrearParametro(cmd, "@seccion", "%" + seccion + "%"); }
+                    if (!string.IsNullOrEmpty(dia)) { query += " AND DiasImparte LIKE @dia"; CrearParametro(cmd, "@dia", "%" + dia + "%"); }
+                    if (!string.IsNullOrEmpty(credito)) { query += " AND Credito = @credito"; CrearParametro(cmd, "@credito", credito); }
+                    if (!string.IsNullOrEmpty(hora)) { query += " AND Hora LIKE @hora"; CrearParametro(cmd, "@hora", "%" + hora + "%"); }
 
                     query += " ORDER BY MaestroNombre ASC";
                     cmd.CommandText = query;
 
-                    MySqlDataAdapter da = new MySqlDataAdapter(cmd);
                     DataTable dt = new DataTable();
-                    da.Fill(dt);
+                    // Usamos DbDataAdapter para evitar el error de conversión de DataTable/DataSet
+                    DbDataAdapter da = (DbDataAdapter)CrearAdapter(query, con);
+
+                    // Asignar parámetros al adapter (esto es necesario en algunos proveedores)
+                    if (da is MySqlDataAdapter mda) mda.SelectCommand = (MySqlCommand)cmd;
+                    else if (da is SQLiteDataAdapter sda) sda.SelectCommand = (SQLiteConnection)con != null ? (SQLiteCommand)cmd : null;
+
+                    da.Fill(dt); // <--- Ya no dará error
                     dataGridView1.DataSource = dt;
                     dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-                    dataGridView1.SelectionMode = DataGridViewSelectionMode.FullRowSelect; // Opcional: selecciona fila completa
-                    dataGridView1.AllowUserToOrderColumns = true; // Permite mover columnas
                 }
             }
-            catch (MySqlException ex) { MessageBox.Show("Error de conexión: " + ex.Message); }
+            catch (Exception ex) { MessageBox.Show("Error al cargar datos: " + ex.Message); }
+        }
+
+        // Método auxiliar para manejar parámetros de forma genérica
+        private void CrearParametro(IDbCommand cmd, string nombre, object valor)
+        {
+            IDbDataParameter param = cmd.CreateParameter();
+            param.ParameterName = nombre;
+            param.Value = valor;
+            cmd.Parameters.Add(param);
         }
 
         // ================= EVENTOS DE CONTROLES =================
@@ -203,27 +369,42 @@ namespace Gestor_de_Horarios_de_Maestros
                 {
                     try
                     {
-                        using (MySqlConnection con = new MySqlConnection(connectionString))
+                        using (IDbConnection con = CrearConexion()) // <--- Genérico
                         {
                             con.Open();
                             string query = "DELETE FROM Materias WHERE IdMateria = @id";
-                            using (MySqlCommand cmd = new MySqlCommand(query, con))
+                            using (IDbCommand cmd = con.CreateCommand())
                             {
-                                cmd.Parameters.AddWithValue("@id", idMateria);
+                                cmd.CommandText = query;
+                                CrearParametro(cmd, "@id", idMateria);
                                 cmd.ExecuteNonQuery();
                             }
                         }
                         ActualizarTodo();
                     }
-                    catch (Exception ex) { MessageBox.Show("Error: " + ex.Message); }
+                    catch (Exception ex) { MessageBox.Show("Error al eliminar: " + ex.Message); }
                 }
             }
         }
 
         private void conexiónToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            using (ConfigConexion ventana = new ConfigConexion()) { ventana.ShowDialog(); }
-            ActualizarTodo();
+            using (ConfigConexion ventana = new ConfigConexion())
+            {
+                if (ventana.ShowDialog() == DialogResult.OK)
+                {
+                    // Forzamos modo remoto
+                    ModoLocal = false;
+                    localToolStripMenuItem.Checked = false;
+                    localToolStripMenuItem.Text = "💻 Cambiar a Local";
+
+                    // Guardamos que ahora el modo preferido es Remoto
+                    Properties.Settings.Default.ModoConexion = "Remoto";
+                    Properties.Settings.Default.Save();
+
+                    ActualizarTodo();
+                }
+            }
         }
 
         private void actualizarToolStripMenuItem_Click(object sender, EventArgs e) => ActualizarTodo();
@@ -273,6 +454,66 @@ namespace Gestor_de_Horarios_de_Maestros
             {
                 ReleaseCapture();
                 SendMessage(this.Handle, 0x112, 0xf012, 0);
+            }
+        }
+
+        private void localToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            // Invertimos el modo
+            ModoLocal = !ModoLocal;
+            localToolStripMenuItem.Checked = ModoLocal;
+
+            // 3. Guardamos la preferencia de forma permanente
+            Properties.Settings.Default.ModoConexion = ModoLocal ? "Local" : "Remoto";
+            Properties.Settings.Default.Save(); // ¡Importante para que no se olvide!
+
+            if (ModoLocal)
+            {
+                localToolStripMenuItem.Text = "🌐 Cambiar a Remota";
+                MessageBox.Show("Cambiado a Modo LOCAL", "Persistencia", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            else
+            {
+                localToolStripMenuItem.Text = "💻 Cambiar a Local";
+                MessageBox.Show("Cambiado a Modo REMOTO", "Persistencia", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+
+            ActualizarTodo();
+        }
+
+        private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex < 0) return;
+
+            // 1. Obtener los datos de la fila
+            var fila = dataGridView1.Rows[e.RowIndex];
+            string id = dataGridView1.Rows[e.RowIndex].Cells[0].Value.ToString();
+            string nombre = fila.Cells["Materia"].Value.ToString();
+            string IDMateria = fila.Cells["ID"].Value.ToString();
+
+            // 2. Preguntar
+            if (MessageBox.Show($"¿Eliminar {IDMateria} - {nombre}?", "Confirmar", MessageBoxButtons.YesNo) == DialogResult.Yes)
+            {
+                try
+                {
+                    using (var con = CrearConexion())
+                    {
+                        con.Open();
+                        var cmd = con.CreateCommand();
+                        cmd.CommandText = "DELETE FROM Materias WHERE IdMateria = @id";
+                        CrearParametro(cmd, "@id", id);
+                        cmd.ExecuteNonQuery();
+                    }
+
+                    // 3. AHORA SÍ: Si se borró en la DB, lo quitamos del Grid visualmente
+                    dataGridView1.Rows.RemoveAt(e.RowIndex);
+
+                    MessageBox.Show("Eliminado con éxito.");
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Error al eliminar: " + ex.Message);
+                }
             }
         }
     }

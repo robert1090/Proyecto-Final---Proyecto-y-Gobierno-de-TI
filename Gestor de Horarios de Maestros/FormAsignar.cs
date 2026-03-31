@@ -1,14 +1,17 @@
 ﻿using System;
 using System.Data;
+using System.Data.SQLite;
 using System.Windows.Forms;
 using MySql.Data.MySqlClient;
 using System.Configuration;
+using System.IO;
 
 namespace Gestor_de_Horarios_de_Maestros
 {
     public partial class FormAsignar : Form
     {
-        string connectionString => ConfigurationManager.ConnectionStrings["MiConexion"].ConnectionString;
+        // Propiedad para detectar el modo de conexión desde los settings del proyecto
+        private bool ModoLocal => Properties.Settings.Default.ModoConexion == "Local";
 
         public FormAsignar()
         {
@@ -17,63 +20,72 @@ namespace Gestor_de_Horarios_de_Maestros
             CargarCuatrimestres();
         }
 
+        // --- MÉTODOS DE CONEXIÓN HÍBRIDA ---
+
+        private IDbConnection CrearConexion()
+        {
+            if (ModoLocal)
+            {
+                string dbPath = Path.Combine(Application.StartupPath, "LocalData.db");
+                return new SQLiteConnection($"Data Source={dbPath};");
+            }
+            else
+            {
+                string remoteString = ConfigurationManager.ConnectionStrings["MiConexion"]?.ConnectionString;
+                return new MySqlConnection(remoteString);
+            }
+        }
+
+        private void LlenarDataTable(DataTable dt, string query, IDbConnection con)
+        {
+            if (ModoLocal)
+            {
+                using (SQLiteDataAdapter da = new SQLiteDataAdapter(query, (SQLiteConnection)con))
+                    da.Fill(dt);
+            }
+            else
+            {
+                using (MySqlDataAdapter da = new MySqlDataAdapter(query, (MySqlConnection)con))
+                    da.Fill(dt);
+            }
+        }
+
+        private void AñadirParametro(IDbCommand cmd, string nombre, object valor)
+        {
+            IDbDataParameter param = cmd.CreateParameter();
+            param.ParameterName = nombre;
+            param.Value = valor ?? DBNull.Value;
+            cmd.Parameters.Add(param);
+        }
+
+        // --- LÓGICA DEL FORMULARIO ---
+
         private void CargarDatos()
         {
             try
             {
-                using (MySqlConnection con = new MySqlConnection(connectionString))
+                using (IDbConnection con = CrearConexion())
                 {
                     con.Open();
+
                     // Cargar Maestros
-                    MySqlDataAdapter daM = new MySqlDataAdapter("SELECT IdMaestro, Nombre FROM Maestros", con);
                     DataTable dtM = new DataTable();
-                    daM.Fill(dtM);
+                    LlenarDataTable(dtM, "SELECT IdMaestro, Nombre FROM Maestros ORDER BY Nombre", con);
                     cmbMaestros.DataSource = dtM;
                     cmbMaestros.DisplayMember = "Nombre";
                     cmbMaestros.ValueMember = "IdMaestro";
 
-                    // Cargar Materias (Asegúrate que el nombre de la tabla sea 'Materias')
-                    MySqlDataAdapter daMat = new MySqlDataAdapter("SELECT IdMateria, Nombre FROM Materias", con);
+                    // Cargar Materias
                     DataTable dtMat = new DataTable();
-                    daMat.Fill(dtMat);
+                    LlenarDataTable(dtMat, "SELECT IdMateria, Nombre FROM Materias ORDER BY Nombre", con);
                     cmbMaterias.DataSource = dtMat;
                     cmbMaterias.DisplayMember = "Nombre";
                     cmbMaterias.ValueMember = "IdMateria";
                 }
             }
-            catch (Exception ex) { MessageBox.Show("Error al cargar datos: " + ex.Message); }
-        }
-
-        private void btnGuardar_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                using (MySqlConnection con = new MySqlConnection(connectionString))
-                {
-                    con.Open();
-
-                    string query = @"UPDATE Materias 
-                             SET IdMaestro = @idM,
-                                 IdCuatrimestre = @idC
-                             WHERE IdMateria = @idMat";
-
-                    MySqlCommand cmd = new MySqlCommand(query, con);
-
-                    cmd.Parameters.AddWithValue("@idM", cmbMaestros.SelectedValue);
-                    cmd.Parameters.AddWithValue("@idMat", cmbMaterias.SelectedValue);
-                    cmd.Parameters.AddWithValue("@idC", cmbCuatrimestre.SelectedValue);
-
-                    cmd.ExecuteNonQuery();
-
-                    MessageBox.Show("Asignación guardada correctamente");
-
-                    this.DialogResult = DialogResult.OK;
-                    this.Close();
-                }
-            }
             catch (Exception ex)
             {
-                MessageBox.Show("Error al asignar: " + ex.Message);
+                MessageBox.Show("Error al cargar maestros/materias: " + ex.Message, "Error de Carga");
             }
         }
 
@@ -81,15 +93,11 @@ namespace Gestor_de_Horarios_de_Maestros
         {
             try
             {
-                using (MySqlConnection con = new MySqlConnection(connectionString))
+                using (IDbConnection con = CrearConexion())
                 {
                     con.Open();
-
-                    MySqlDataAdapter da = new MySqlDataAdapter(
-                    "SELECT IdCuatrimestre, Nombre FROM Cuatrimestres", con);
-
                     DataTable dt = new DataTable();
-                    da.Fill(dt);
+                    LlenarDataTable(dt, "SELECT IdCuatrimestre, Nombre FROM Cuatrimestres ORDER BY IdCuatrimestre DESC", con);
 
                     cmbCuatrimestre.DataSource = dt;
                     cmbCuatrimestre.DisplayMember = "Nombre";
@@ -98,8 +106,54 @@ namespace Gestor_de_Horarios_de_Maestros
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error cargando cuatrimestres: " + ex.Message);
+                MessageBox.Show("Error cargando cuatrimestres: " + ex.Message, "Error");
             }
+        }
+
+        private void btnGuardar_Click(object sender, EventArgs e)
+        {
+            // Validación simple
+            if (cmbMaestros.SelectedValue == null || cmbMaterias.SelectedValue == null || cmbCuatrimestre.SelectedValue == null)
+            {
+                MessageBox.Show("Por favor seleccione todos los campos.", "Validación");
+                return;
+            }
+
+            try
+            {
+                using (IDbConnection con = CrearConexion())
+                {
+                    con.Open();
+                    IDbCommand cmd = con.CreateCommand();
+
+                    // Query de actualización (funciona igual en MySQL y SQLite)
+                    cmd.CommandText = @"UPDATE Materias 
+                                       SET IdMaestro = @idM, 
+                                           IdCuatrimestre = @idC 
+                                       WHERE IdMateria = @idMat";
+
+                    // Añadimos parámetros usando nuestra función genérica
+                    AñadirParametro(cmd, "@idM", cmbMaestros.SelectedValue);
+                    AñadirParametro(cmd, "@idC", cmbCuatrimestre.SelectedValue);
+                    AñadirParametro(cmd, "@idMat", cmbMaterias.SelectedValue);
+
+                    cmd.ExecuteNonQuery();
+
+                    MessageBox.Show("Asignación guardada correctamente", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                    this.DialogResult = DialogResult.OK;
+                    this.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error al realizar la asignación: " + ex.Message, "Error de Base de Datos");
+            }
+        }
+
+        private void btnCancelar_Click(object sender, EventArgs e)
+        {
+            this.Close();
         }
     }
 }

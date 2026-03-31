@@ -66,3 +66,6 @@ También se recomienda realizar copias de seguridad periódicas de la base de da
 * Miguel Ángel Jiménez (23-EISN-2-010): Se modifico la Base de Datos para agregar la Tabla de Cuatrimestre, tambien se modifico el Grid para mostrar el mismo y la funcion de Asignar para poder asignar un Cuatrimestre.
 * Correacciones: Se ajustaron las ventanas emergentes para que estas se centren automaticamente con la ventana principal, tambien se modifico el DataGridViwer para que se expandan las casillas segun el tamaño de la ventana.
 * Cambios: Se realizaron cambios como la barra de titulo personalizada y otros ajustez visuales menores.
+* José Angel Bello (23-SISN-2-015): Se agrego la opcion de eliminar al realizar doble click en el DataGridView.
+* Amauris Enmanuel Beras de la Cruz (21-Eisn-2-052): Se agrego la opcion de Registrar Cuatrimestre dentro de Agregar.
+* Robert Avila (23-SISN-2-001): Se agrego la opcion de conexion Local o Remota, modificaron todos los apartados para permitir la conexion en Modo Local o Remoto, se realizaron correciones menores.

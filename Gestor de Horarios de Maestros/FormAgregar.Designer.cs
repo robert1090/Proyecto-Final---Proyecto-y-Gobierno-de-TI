@@ -15,148 +15,533 @@
 
         private void InitializeComponent()
         {
-            this.tabControl = new System.Windows.Forms.TabControl();
-            this.tabMaestro = new System.Windows.Forms.TabPage();
-            this.tabMateria = new System.Windows.Forms.TabPage();
-            this.txtNombreMaestro = new System.Windows.Forms.TextBox();
-            this.lblNombreMaestro = new System.Windows.Forms.Label();
-
-            // Controles Materia
-            this.txtIdMateria = new System.Windows.Forms.TextBox();
-            this.cmbMaestro = new System.Windows.Forms.ComboBox();
-            this.txtNombreMateria = new System.Windows.Forms.TextBox();
-            this.txtDias = new System.Windows.Forms.TextBox();
-            this.txtHora = new System.Windows.Forms.TextBox();
-            this.txtAula = new System.Windows.Forms.TextBox();
-            this.txtHDCredito = new System.Windows.Forms.TextBox();
-            this.txtSeccion = new System.Windows.Forms.TextBox();
-            this.txtDiasMes = new System.Windows.Forms.TextBox();
-            this.txtCredito = new System.Windows.Forms.TextBox();
-            this.txtTotalCredito = new System.Windows.Forms.TextBox();
-            this.txtInscritos = new System.Windows.Forms.TextBox();
-
-            this.btnGuardar = new System.Windows.Forms.Button();
-            this.btnCancelar = new System.Windows.Forms.Button();
-
-            // Labels
-            this.L1 = new System.Windows.Forms.Label(); this.L2 = new System.Windows.Forms.Label();
-            this.L3 = new System.Windows.Forms.Label(); this.L4 = new System.Windows.Forms.Label();
-            this.L5 = new System.Windows.Forms.Label(); this.L6 = new System.Windows.Forms.Label();
-            this.L7 = new System.Windows.Forms.Label(); this.L8 = new System.Windows.Forms.Label();
-            this.L9 = new System.Windows.Forms.Label(); this.L10 = new System.Windows.Forms.Label();
-            this.L11 = new System.Windows.Forms.Label(); this.L12 = new System.Windows.Forms.Label();
-
-            this.tabControl.SuspendLayout();
-            this.tabMaestro.SuspendLayout();
-            this.tabMateria.SuspendLayout();
-            this.SuspendLayout();
-
-            this.tabControl.Controls.Add(this.tabMaestro);
-            this.tabControl.Controls.Add(this.tabMateria);
-            this.tabControl.Location = new System.Drawing.Point(12, 12);
-            this.tabControl.Size = new System.Drawing.Size(435, 360);
-            this.tabControl.SelectedIndexChanged += new System.EventHandler(this.TabControl_SelectedIndexChanged);
-
-            // Tab Maestro
-            this.tabMaestro.Controls.Add(this.lblNombreMaestro);
-            this.tabMaestro.Controls.Add(this.txtNombreMaestro);
-            this.tabMaestro.Text = "Nuevo Maestro";
-            this.lblNombreMaestro.Text = "Nombre del Maestro:";
-            this.lblNombreMaestro.Location = new System.Drawing.Point(20, 30);
-            this.lblNombreMaestro.AutoSize = true;
-            this.txtNombreMaestro.Location = new System.Drawing.Point(20, 50);
-            this.txtNombreMaestro.Size = new System.Drawing.Size(300, 23);
-
-            // Tab Materia
-            this.tabMateria.Text = "Nueva Materia";
-
-            // Columna 1
-            Colocar(L1, "ID Materia:", 15, 20, tabMateria);
-            this.txtIdMateria.Location = new System.Drawing.Point(110, 17);
-            this.txtIdMateria.Size = new System.Drawing.Size(80, 23);
+            tabControl = new TabControl();
+            tabMaestro = new TabPage();
+            lblNombreMaestro = new Label();
+            txtNombreMaestro = new TextBox();
+            tabCuatrimestre = new TabPage();
+            txtNombreCuatrimestre = new TextBox();
+            dtpInicio = new DateTimePicker();
+            dtpFin = new DateTimePicker();
+            tabMateria = new TabPage();
+            label12 = new Label();
+            label11 = new Label();
+            label10 = new Label();
+            label9 = new Label();
+            label8 = new Label();
+            label7 = new Label();
+            label6 = new Label();
+            label5 = new Label();
+            label4 = new Label();
+            label3 = new Label();
+            label2 = new Label();
+            label1 = new Label();
+            txtIdMateria = new TextBox();
+            cmbMaestro = new ComboBox();
+            txtNombreMateria = new TextBox();
+            txtDias = new TextBox();
+            txtHora = new TextBox();
+            txtAula = new TextBox();
+            txtHDCredito = new TextBox();
+            txtSeccion = new TextBox();
+            txtDiasMes = new TextBox();
+            txtCredito = new TextBox();
+            txtTotalCredito = new TextBox();
+            txtInscritos = new TextBox();
+            btnGuardar = new Button();
+            btnCancelar = new Button();
+            L1 = new Label();
+            L2 = new Label();
+            L3 = new Label();
+            L4 = new Label();
+            L5 = new Label();
+            L6 = new Label();
+            L7 = new Label();
+            L8 = new Label();
+            L9 = new Label();
+            L10 = new Label();
+            L11 = new Label();
+            L12 = new Label();
+            LC1 = new Label();
+            LC2 = new Label();
+            LC3 = new Label();
+            label13 = new Label();
+            label14 = new Label();
+            label15 = new Label();
+            tabControl.SuspendLayout();
+            tabMaestro.SuspendLayout();
+            tabCuatrimestre.SuspendLayout();
+            tabMateria.SuspendLayout();
+            SuspendLayout();
+            // 
+            // tabControl
+            // 
+            tabControl.Controls.Add(tabMaestro);
+            tabControl.Controls.Add(tabCuatrimestre);
+            tabControl.Controls.Add(tabMateria);
+            tabControl.Location = new Point(12, 12);
+            tabControl.Name = "tabControl";
+            tabControl.SelectedIndex = 0;
+            tabControl.Size = new Size(435, 360);
+            tabControl.TabIndex = 0;
+            tabControl.SelectedIndexChanged += TabControl_SelectedIndexChanged;
+            // 
+            // tabMaestro
+            // 
+            tabMaestro.Controls.Add(lblNombreMaestro);
+            tabMaestro.Controls.Add(txtNombreMaestro);
+            tabMaestro.Location = new Point(4, 24);
+            tabMaestro.Name = "tabMaestro";
+            tabMaestro.Size = new Size(427, 332);
+            tabMaestro.TabIndex = 0;
+            tabMaestro.Text = "Nuevo Maestro";
+            // 
+            // lblNombreMaestro
+            // 
+            lblNombreMaestro.AutoSize = true;
+            lblNombreMaestro.Location = new Point(20, 30);
+            lblNombreMaestro.Name = "lblNombreMaestro";
+            lblNombreMaestro.Size = new Size(119, 15);
+            lblNombreMaestro.TabIndex = 0;
+            lblNombreMaestro.Text = "Nombre del Maestro:";
+            // 
+            // txtNombreMaestro
+            // 
+            txtNombreMaestro.Location = new Point(20, 50);
+            txtNombreMaestro.Name = "txtNombreMaestro";
+            txtNombreMaestro.Size = new Size(300, 23);
+            txtNombreMaestro.TabIndex = 1;
+            // 
+            // tabCuatrimestre
+            // 
+            tabCuatrimestre.Controls.Add(label15);
+            tabCuatrimestre.Controls.Add(label14);
+            tabCuatrimestre.Controls.Add(label13);
+            tabCuatrimestre.Controls.Add(txtNombreCuatrimestre);
+            tabCuatrimestre.Controls.Add(dtpInicio);
+            tabCuatrimestre.Controls.Add(dtpFin);
+            tabCuatrimestre.Location = new Point(4, 24);
+            tabCuatrimestre.Name = "tabCuatrimestre";
+            tabCuatrimestre.Size = new Size(427, 332);
+            tabCuatrimestre.TabIndex = 2;
+            tabCuatrimestre.Text = "Nuevo Cuatrimestre";
+            // 
+            // txtNombreCuatrimestre
+            // 
+            txtNombreCuatrimestre.Location = new Point(110, 17);
+            txtNombreCuatrimestre.Name = "txtNombreCuatrimestre";
+            txtNombreCuatrimestre.Size = new Size(280, 23);
+            txtNombreCuatrimestre.TabIndex = 0;
+            // 
+            // dtpInicio
+            // 
+            dtpInicio.Format = DateTimePickerFormat.Short;
+            dtpInicio.Location = new Point(110, 52);
+            dtpInicio.Name = "dtpInicio";
+            dtpInicio.Size = new Size(120, 23);
+            dtpInicio.TabIndex = 1;
+            // 
+            // dtpFin
+            // 
+            dtpFin.Format = DateTimePickerFormat.Short;
+            dtpFin.Location = new Point(310, 52);
+            dtpFin.Name = "dtpFin";
+            dtpFin.Size = new Size(110, 23);
+            dtpFin.TabIndex = 2;
+            // 
+            // tabMateria
+            // 
+            tabMateria.Controls.Add(label12);
+            tabMateria.Controls.Add(label11);
+            tabMateria.Controls.Add(label10);
+            tabMateria.Controls.Add(label9);
+            tabMateria.Controls.Add(label8);
+            tabMateria.Controls.Add(label7);
+            tabMateria.Controls.Add(label6);
+            tabMateria.Controls.Add(label5);
+            tabMateria.Controls.Add(label4);
+            tabMateria.Controls.Add(label3);
+            tabMateria.Controls.Add(label2);
+            tabMateria.Controls.Add(label1);
             tabMateria.Controls.Add(txtIdMateria);
-
-            Colocar(L2, "Maestro:", 15, 55, tabMateria);
-            this.cmbMaestro.Location = new System.Drawing.Point(110, 52);
-            this.cmbMaestro.Size = new System.Drawing.Size(280, 23);
-            this.cmbMaestro.DropDownStyle = ComboBoxStyle.DropDownList;
             tabMateria.Controls.Add(cmbMaestro);
-
-            Colocar(L3, "Materia:", 15, 90, tabMateria);
-            this.txtNombreMateria.Location = new System.Drawing.Point(110, 87);
-            this.txtNombreMateria.Size = new System.Drawing.Size(280, 23);
             tabMateria.Controls.Add(txtNombreMateria);
-
-            Colocar(L4, "Días:", 15, 125, tabMateria);
-            this.txtDias.Location = new System.Drawing.Point(110, 122);
-            this.txtDias.Size = new System.Drawing.Size(280, 23);
             tabMateria.Controls.Add(txtDias);
-
-            // Fila Mixta
-            Colocar(L5, "Hora:", 15, 160, tabMateria);
-            this.txtHora.Location = new System.Drawing.Point(110, 157);
-            this.txtHora.Size = new System.Drawing.Size(90, 23);
             tabMateria.Controls.Add(txtHora);
-
-            Colocar(L6, "Aula:", 220, 160, tabMateria);
-            this.txtAula.Location = new System.Drawing.Point(280, 157);
-            this.txtAula.Size = new System.Drawing.Size(110, 23);
             tabMateria.Controls.Add(txtAula);
-
-            Colocar(L7, "H/D Cred:", 15, 195, tabMateria);
-            this.txtHDCredito.Location = new System.Drawing.Point(110, 192);
-            this.txtHDCredito.Size = new System.Drawing.Size(90, 23);
             tabMateria.Controls.Add(txtHDCredito);
-
-            Colocar(L8, "Sección:", 220, 195, tabMateria);
-            this.txtSeccion.Location = new System.Drawing.Point(280, 192);
-            this.txtSeccion.Size = new System.Drawing.Size(110, 23);
             tabMateria.Controls.Add(txtSeccion);
-
-            Colocar(L9, "Días/Mes:", 15, 230, tabMateria);
-            this.txtDiasMes.Location = new System.Drawing.Point(110, 227);
-            this.txtDiasMes.Size = new System.Drawing.Size(90, 23);
             tabMateria.Controls.Add(txtDiasMes);
-
-            Colocar(L10, "Créditos:", 220, 230, tabMateria);
-            this.txtCredito.Location = new System.Drawing.Point(280, 227);
-            this.txtCredito.Size = new System.Drawing.Size(110, 23);
             tabMateria.Controls.Add(txtCredito);
-
-            Colocar(L11, "Total Cred:", 15, 265, tabMateria);
-            this.txtTotalCredito.Location = new System.Drawing.Point(110, 262);
-            this.txtTotalCredito.Size = new System.Drawing.Size(90, 23);
             tabMateria.Controls.Add(txtTotalCredito);
-
-            Colocar(L12, "Inscritos:", 220, 265, tabMateria);
-            this.txtInscritos.Location = new System.Drawing.Point(280, 262);
-            this.txtInscritos.Size = new System.Drawing.Size(110, 23);
             tabMateria.Controls.Add(txtInscritos);
-
-            // Botones
-            this.btnGuardar.Location = new System.Drawing.Point(230, 385);
-            this.btnGuardar.Size = new System.Drawing.Size(100, 35);
-            this.btnGuardar.Text = "Guardar";
-            this.btnGuardar.Click += new System.EventHandler(this.BtnGuardar_Click);
-
-            this.btnCancelar.Location = new System.Drawing.Point(340, 385);
-            this.btnCancelar.Size = new System.Drawing.Size(100, 35);
-            this.btnCancelar.Text = "Cancelar";
-            this.btnCancelar.Click += new System.EventHandler(this.BtnCancelar_Click);
-
-            this.ClientSize = new System.Drawing.Size(460, 440);
-            this.Controls.Add(this.tabControl);
-            this.Controls.Add(this.btnGuardar);
-            this.Controls.Add(this.btnCancelar);
-            this.FormBorderStyle = FormBorderStyle.FixedDialog;
-            this.StartPosition = FormStartPosition.CenterParent;
-            this.Text = "Agregar";
-
-            this.tabControl.ResumeLayout(false);
-            this.tabMaestro.ResumeLayout(false);
-            this.tabMateria.ResumeLayout(false);
-            this.tabMateria.PerformLayout();
-            this.ResumeLayout(false);
+            tabMateria.Location = new Point(4, 24);
+            tabMateria.Name = "tabMateria";
+            tabMateria.Size = new Size(427, 332);
+            tabMateria.TabIndex = 1;
+            tabMateria.Text = "Nueva Materia";
+            // 
+            // label12
+            // 
+            label12.AutoSize = true;
+            label12.Location = new Point(214, 265);
+            label12.Name = "label12";
+            label12.Size = new Size(57, 15);
+            label12.TabIndex = 23;
+            label12.Text = "Inscritos: ";
+            // 
+            // label11
+            // 
+            label11.AutoSize = true;
+            label11.Location = new Point(214, 230);
+            label11.Name = "label11";
+            label11.Size = new Size(57, 15);
+            label11.TabIndex = 22;
+            label11.Text = "Créditos: ";
+            // 
+            // label10
+            // 
+            label10.AutoSize = true;
+            label10.Location = new Point(214, 195);
+            label10.Name = "label10";
+            label10.Size = new Size(54, 15);
+            label10.TabIndex = 21;
+            label10.Text = "Seccíon: ";
+            // 
+            // label9
+            // 
+            label9.AutoSize = true;
+            label9.Location = new Point(214, 160);
+            label9.Name = "label9";
+            label9.Size = new Size(37, 15);
+            label9.TabIndex = 20;
+            label9.Text = "Aula: ";
+            // 
+            // label8
+            // 
+            label8.AutoSize = true;
+            label8.Location = new Point(14, 265);
+            label8.Name = "label8";
+            label8.Size = new Size(67, 15);
+            label8.TabIndex = 19;
+            label8.Text = "Total Cred: ";
+            // 
+            // label7
+            // 
+            label7.AutoSize = true;
+            label7.Location = new Point(14, 230);
+            label7.Name = "label7";
+            label7.Size = new Size(59, 15);
+            label7.TabIndex = 18;
+            label7.Text = "Días/Mes:";
+            // 
+            // label6
+            // 
+            label6.AutoSize = true;
+            label6.Location = new Point(14, 195);
+            label6.Name = "label6";
+            label6.Size = new Size(63, 15);
+            label6.TabIndex = 17;
+            label6.Text = "H/D Cred: ";
+            // 
+            // label5
+            // 
+            label5.AutoSize = true;
+            label5.Location = new Point(14, 160);
+            label5.Name = "label5";
+            label5.Size = new Size(36, 15);
+            label5.TabIndex = 16;
+            label5.Text = "Hora:";
+            // 
+            // label4
+            // 
+            label4.AutoSize = true;
+            label4.Location = new Point(14, 90);
+            label4.Name = "label4";
+            label4.Size = new Size(53, 15);
+            label4.TabIndex = 15;
+            label4.Text = "Materia: ";
+            // 
+            // label3
+            // 
+            label3.AutoSize = true;
+            label3.Location = new Point(14, 125);
+            label3.Name = "label3";
+            label3.Size = new Size(35, 15);
+            label3.TabIndex = 14;
+            label3.Text = "Días: ";
+            // 
+            // label2
+            // 
+            label2.AutoSize = true;
+            label2.Location = new Point(14, 55);
+            label2.Name = "label2";
+            label2.Size = new Size(56, 15);
+            label2.TabIndex = 13;
+            label2.Text = "Maestro: ";
+            // 
+            // label1
+            // 
+            label1.AutoSize = true;
+            label1.Location = new Point(14, 20);
+            label1.Name = "label1";
+            label1.Size = new Size(64, 15);
+            label1.TabIndex = 12;
+            label1.Text = "ID Materia:";
+            // 
+            // txtIdMateria
+            // 
+            txtIdMateria.Location = new Point(110, 17);
+            txtIdMateria.Name = "txtIdMateria";
+            txtIdMateria.Size = new Size(80, 23);
+            txtIdMateria.TabIndex = 0;
+            // 
+            // cmbMaestro
+            // 
+            cmbMaestro.DropDownStyle = ComboBoxStyle.DropDownList;
+            cmbMaestro.Location = new Point(110, 52);
+            cmbMaestro.Name = "cmbMaestro";
+            cmbMaestro.Size = new Size(280, 23);
+            cmbMaestro.TabIndex = 1;
+            // 
+            // txtNombreMateria
+            // 
+            txtNombreMateria.Location = new Point(110, 87);
+            txtNombreMateria.Name = "txtNombreMateria";
+            txtNombreMateria.Size = new Size(280, 23);
+            txtNombreMateria.TabIndex = 2;
+            // 
+            // txtDias
+            // 
+            txtDias.Location = new Point(110, 122);
+            txtDias.Name = "txtDias";
+            txtDias.Size = new Size(280, 23);
+            txtDias.TabIndex = 3;
+            // 
+            // txtHora
+            // 
+            txtHora.Location = new Point(110, 157);
+            txtHora.Name = "txtHora";
+            txtHora.Size = new Size(90, 23);
+            txtHora.TabIndex = 4;
+            // 
+            // txtAula
+            // 
+            txtAula.Location = new Point(280, 157);
+            txtAula.Name = "txtAula";
+            txtAula.Size = new Size(110, 23);
+            txtAula.TabIndex = 5;
+            // 
+            // txtHDCredito
+            // 
+            txtHDCredito.Location = new Point(110, 192);
+            txtHDCredito.Name = "txtHDCredito";
+            txtHDCredito.Size = new Size(90, 23);
+            txtHDCredito.TabIndex = 6;
+            // 
+            // txtSeccion
+            // 
+            txtSeccion.Location = new Point(280, 192);
+            txtSeccion.Name = "txtSeccion";
+            txtSeccion.Size = new Size(110, 23);
+            txtSeccion.TabIndex = 7;
+            // 
+            // txtDiasMes
+            // 
+            txtDiasMes.Location = new Point(110, 227);
+            txtDiasMes.Name = "txtDiasMes";
+            txtDiasMes.Size = new Size(90, 23);
+            txtDiasMes.TabIndex = 8;
+            // 
+            // txtCredito
+            // 
+            txtCredito.Location = new Point(280, 227);
+            txtCredito.Name = "txtCredito";
+            txtCredito.Size = new Size(110, 23);
+            txtCredito.TabIndex = 9;
+            // 
+            // txtTotalCredito
+            // 
+            txtTotalCredito.Location = new Point(110, 262);
+            txtTotalCredito.Name = "txtTotalCredito";
+            txtTotalCredito.Size = new Size(90, 23);
+            txtTotalCredito.TabIndex = 10;
+            // 
+            // txtInscritos
+            // 
+            txtInscritos.Location = new Point(280, 262);
+            txtInscritos.Name = "txtInscritos";
+            txtInscritos.Size = new Size(110, 23);
+            txtInscritos.TabIndex = 11;
+            // 
+            // btnGuardar
+            // 
+            btnGuardar.Location = new Point(230, 385);
+            btnGuardar.Name = "btnGuardar";
+            btnGuardar.Size = new Size(100, 35);
+            btnGuardar.TabIndex = 1;
+            btnGuardar.Text = "Guardar";
+            btnGuardar.Click += BtnGuardar_Click;
+            // 
+            // btnCancelar
+            // 
+            btnCancelar.Location = new Point(340, 385);
+            btnCancelar.Name = "btnCancelar";
+            btnCancelar.Size = new Size(100, 35);
+            btnCancelar.TabIndex = 2;
+            btnCancelar.Text = "Cancelar";
+            btnCancelar.Click += BtnCancelar_Click;
+            // 
+            // L1
+            // 
+            L1.Location = new Point(0, 0);
+            L1.Name = "L1";
+            L1.Size = new Size(100, 23);
+            L1.TabIndex = 0;
+            // 
+            // L2
+            // 
+            L2.Location = new Point(0, 0);
+            L2.Name = "L2";
+            L2.Size = new Size(100, 23);
+            L2.TabIndex = 0;
+            // 
+            // L3
+            // 
+            L3.Location = new Point(0, 0);
+            L3.Name = "L3";
+            L3.Size = new Size(100, 23);
+            L3.TabIndex = 0;
+            // 
+            // L4
+            // 
+            L4.Location = new Point(0, 0);
+            L4.Name = "L4";
+            L4.Size = new Size(100, 23);
+            L4.TabIndex = 0;
+            // 
+            // L5
+            // 
+            L5.Location = new Point(0, 0);
+            L5.Name = "L5";
+            L5.Size = new Size(100, 23);
+            L5.TabIndex = 0;
+            // 
+            // L6
+            // 
+            L6.Location = new Point(0, 0);
+            L6.Name = "L6";
+            L6.Size = new Size(100, 23);
+            L6.TabIndex = 0;
+            // 
+            // L7
+            // 
+            L7.Location = new Point(0, 0);
+            L7.Name = "L7";
+            L7.Size = new Size(100, 23);
+            L7.TabIndex = 0;
+            // 
+            // L8
+            // 
+            L8.Location = new Point(0, 0);
+            L8.Name = "L8";
+            L8.Size = new Size(100, 23);
+            L8.TabIndex = 0;
+            // 
+            // L9
+            // 
+            L9.Location = new Point(0, 0);
+            L9.Name = "L9";
+            L9.Size = new Size(100, 23);
+            L9.TabIndex = 0;
+            // 
+            // L10
+            // 
+            L10.Location = new Point(0, 0);
+            L10.Name = "L10";
+            L10.Size = new Size(100, 23);
+            L10.TabIndex = 0;
+            // 
+            // L11
+            // 
+            L11.Location = new Point(0, 0);
+            L11.Name = "L11";
+            L11.Size = new Size(100, 23);
+            L11.TabIndex = 0;
+            // 
+            // L12
+            // 
+            L12.Location = new Point(0, 0);
+            L12.Name = "L12";
+            L12.Size = new Size(100, 23);
+            L12.TabIndex = 0;
+            // 
+            // LC1
+            // 
+            LC1.Location = new Point(0, 0);
+            LC1.Name = "LC1";
+            LC1.Size = new Size(100, 23);
+            LC1.TabIndex = 0;
+            // 
+            // LC2
+            // 
+            LC2.Location = new Point(0, 0);
+            LC2.Name = "LC2";
+            LC2.Size = new Size(100, 23);
+            LC2.TabIndex = 0;
+            // 
+            // LC3
+            // 
+            LC3.Location = new Point(0, 0);
+            LC3.Name = "LC3";
+            LC3.Size = new Size(100, 23);
+            LC3.TabIndex = 0;
+            // 
+            // label13
+            // 
+            label13.AutoSize = true;
+            label13.Location = new Point(23, 20);
+            label13.Name = "label13";
+            label13.Size = new Size(81, 15);
+            label13.TabIndex = 3;
+            label13.Text = "Cuatrimestre: ";
+            // 
+            // label14
+            // 
+            label14.AutoSize = true;
+            label14.Location = new Point(62, 58);
+            label14.Name = "label14";
+            label14.Size = new Size(42, 15);
+            label14.TabIndex = 4;
+            label14.Text = "Inicio: ";
+            // 
+            // label15
+            // 
+            label15.AutoSize = true;
+            label15.Location = new Point(266, 58);
+            label15.Name = "label15";
+            label15.Size = new Size(38, 15);
+            label15.TabIndex = 5;
+            label15.Text = "Final: ";
+            // 
+            // FormAgregar
+            // 
+            ClientSize = new Size(460, 440);
+            Controls.Add(tabControl);
+            Controls.Add(btnGuardar);
+            Controls.Add(btnCancelar);
+            FormBorderStyle = FormBorderStyle.FixedDialog;
+            Name = "FormAgregar";
+            StartPosition = FormStartPosition.CenterParent;
+            Text = "Agregar";
+            tabControl.ResumeLayout(false);
+            tabMaestro.ResumeLayout(false);
+            tabMaestro.PerformLayout();
+            tabCuatrimestre.ResumeLayout(false);
+            tabCuatrimestre.PerformLayout();
+            tabMateria.ResumeLayout(false);
+            tabMateria.PerformLayout();
+            ResumeLayout(false);
         }
 
         private void Colocar(Label l, string t, int x, int y, Control p)
@@ -170,5 +555,25 @@
         private System.Windows.Forms.ComboBox cmbMaestro;
         private System.Windows.Forms.Label lblNombreMaestro, L1, L2, L3, L4, L5, L6, L7, L8, L9, L10, L11, L12;
         private System.Windows.Forms.Button btnGuardar, btnCancelar;
+        private System.Windows.Forms.TabPage tabCuatrimestre;
+        private System.Windows.Forms.TextBox txtNombreCuatrimestre;
+        private System.Windows.Forms.DateTimePicker dtpInicio;
+        private System.Windows.Forms.DateTimePicker dtpFin;
+        private System.Windows.Forms.Label LC1, LC2, LC3;
+        private Label label6;
+        private Label label5;
+        private Label label4;
+        private Label label3;
+        private Label label2;
+        private Label label1;
+        private Label label12;
+        private Label label11;
+        private Label label10;
+        private Label label9;
+        private Label label8;
+        private Label label7;
+        private Label label15;
+        private Label label14;
+        private Label label13;
     }
 }

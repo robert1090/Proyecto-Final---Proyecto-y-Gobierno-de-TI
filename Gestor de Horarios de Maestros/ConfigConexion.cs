@@ -28,28 +28,49 @@ namespace Gestor_de_Horarios_de_Maestros
 
         private void button1_Click(object sender, EventArgs e)
         {
+            // Construimos la cadena con los datos de los TextBox
             string nuevaCadena = $"Server={txtServer.Text};Database={txtDatabase.Text};Uid={txtUser.Text};Pwd={txtPassword.Text};";
 
             try
             {
-                // Abrimos la configuración del archivo ejecutable
+                // 1. Abrimos la configuración del archivo ejecutable
                 Configuration config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
 
-                // Actualizamos la sección connectionStrings
-                config.ConnectionStrings.ConnectionStrings["MiConexion"].ConnectionString = nuevaCadena;
+                // 2. Intentamos obtener la conexión "MiConexion"
+                var conexionExistente = config.ConnectionStrings.ConnectionStrings["MiConexion"];
 
-                // Guardamos los cambios de forma permanente
+                if (conexionExistente != null)
+                {
+                    // Si ya existe, simplemente actualizamos su valor
+                    conexionExistente.ConnectionString = nuevaCadena;
+                }
+                else
+                {
+                    // Si NO existe (primera vez), creamos un nuevo objeto de configuración
+                    ConnectionStringSettings nuevaConfig = new ConnectionStringSettings();
+                    nuevaConfig.Name = "MiConexion";
+                    nuevaConfig.ConnectionString = nuevaCadena;
+                    nuevaConfig.ProviderName = "MySql.Data.MySqlClient";
+
+                    // Lo agregamos a la sección de cadenas de conexión
+                    config.ConnectionStrings.ConnectionStrings.Add(nuevaConfig);
+                }
+
+                // 3. Guardamos los cambios de forma permanente en el disco
                 config.Save(ConfigurationSaveMode.Modified);
 
-                // Forzamos la recarga en memoria para que el programa use los nuevos datos inmediatamente
+                // 4. Forzamos la recarga en memoria
                 ConfigurationManager.RefreshSection("connectionStrings");
 
-                MessageBox.Show("Conexión guardada con éxito. Los cambios se aplicarán ahora.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("Conexión guardada con éxito.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                // Indicamos que el resultado fue exitoso para que el Form Principal sepa que debe refrescar
+                this.DialogResult = DialogResult.OK;
                 this.Close();
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error al guardar la configuración: " + ex.Message);
+                MessageBox.Show("Error al guardar la configuración: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 

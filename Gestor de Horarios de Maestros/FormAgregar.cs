@@ -1,19 +1,52 @@
 ﻿using System;
+using System.Data;
+using System.Data.SQLite;
+using MySql.Data.MySqlClient;
+using System.IO;
+using System.Collections.Generic;
 using System.Configuration;
 using System.Windows.Forms;
-using MySql.Data.MySqlClient;
-using System.Collections.Generic; // Necesario para List<>
 
 namespace Gestor_de_Horarios_de_Maestros
 {
     public partial class FormAgregar : Form
     {
-        string connectionString => ConfigurationManager.ConnectionStrings["MiConexion"].ConnectionString;
+        // Detecta el modo de conexión
+        private bool ModoLocal => Properties.Settings.Default.ModoConexion == "Local";
 
         public FormAgregar()
         {
             InitializeComponent();
         }
+
+        // --- MÉTODOS DE CONEXIÓN HÍBRIDA ---
+
+        private IDbConnection CrearConexion()
+        {
+            if (ModoLocal)
+            {
+                string dbPath = Path.Combine(Application.StartupPath, "LocalData.db");
+                return new SQLiteConnection($"Data Source={dbPath};");
+            }
+            else
+            {
+                var settings = ConfigurationManager.ConnectionStrings["MiConexion"];
+                if (settings == null)
+                    throw new Exception("No se encontró la cadena de conexión 'MiConexion' en el archivo App.config.");
+
+                return new MySqlConnection(settings.ConnectionString);
+            }
+        }
+
+        private void CrearParametro(IDbCommand cmd, string nombre, object valor)
+        {
+            IDbDataParameter param = cmd.CreateParameter();
+            param.ParameterName = nombre;
+            param.Value = valor ?? DBNull.Value;
+            cmd.Parameters.Add(param);
+        }
+
+        // --- EVENTOS Y LÓGICA ---
 
         private void TabControl_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -25,11 +58,13 @@ namespace Gestor_de_Horarios_de_Maestros
         {
             try
             {
-                using (MySqlConnection con = new MySqlConnection(connectionString))
+                using (IDbConnection con = CrearConexion())
                 {
                     con.Open();
-                    MySqlCommand cmd = new MySqlCommand("SELECT IdMaestro, Nombre FROM Maestros ORDER BY Nombre", con);
-                    using (MySqlDataReader reader = cmd.ExecuteReader())
+                    IDbCommand cmd = con.CreateCommand();
+                    cmd.CommandText = "SELECT IdMaestro, Nombre FROM Maestros ORDER BY Nombre";
+
+                    using (IDataReader reader = cmd.ExecuteReader())
                     {
                         cmbMaestro.Items.Clear();
                         while (reader.Read())
@@ -38,176 +73,140 @@ namespace Gestor_de_Horarios_de_Maestros
                 }
                 if (cmbMaestro.Items.Count > 0) cmbMaestro.SelectedIndex = 0;
             }
-            catch (MySqlException ex)
-            {
-                MessageBox.Show("Error al cargar maestros: " + ex.Message, "Error");
-            }
+            catch (Exception ex) { MessageBox.Show("Error al cargar maestros: " + ex.Message); }
         }
 
         private void BtnGuardar_Click(object sender, EventArgs e)
         {
-            if (tabControl.SelectedIndex == 0)
-                GuardarMaestro();
-            else
-                GuardarMateria();
+            if (tabControl.SelectedIndex == 0) GuardarMaestro();
+            else if (tabControl.SelectedIndex == 1) GuardarCuatrimestre();
+            else if (tabControl.SelectedIndex == 2) GuardarMateria();
+        }
+
+        private void GuardarCuatrimestre()
+        {
+            if (string.IsNullOrWhiteSpace(txtNombreCuatrimestre.Text)) return;
+
+            try
+            {
+                using (IDbConnection con = CrearConexion()) // Cambiado a CrearConexion()
+                {
+                    con.Open();
+                    IDbCommand cmd = con.CreateCommand();
+                    cmd.CommandText = "INSERT INTO Cuatrimestres (Nombre, FechaInicio, FechaFin) VALUES (@nom, @ini, @fin)";
+
+                    CrearParametro(cmd, "@nom", txtNombreCuatrimestre.Text);
+                    CrearParametro(cmd, "@ini", dtpInicio.Value);
+                    CrearParametro(cmd, "@fin", dtpFin.Value);
+
+                    cmd.ExecuteNonQuery();
+                }
+                MessageBox.Show("Cuatrimestre guardado con éxito.");
+                txtNombreCuatrimestre.Clear();
+            }
+            catch (Exception ex) { MessageBox.Show("Error: " + ex.Message); }
         }
 
         private void GuardarMaestro()
         {
-            if (string.IsNullOrWhiteSpace(txtNombreMaestro.Text))
-            {
-                MessageBox.Show("El nombre del maestro es obligatorio.", "Validación");
-                return;
-            }
+            if (string.IsNullOrWhiteSpace(txtNombreMaestro.Text)) return;
+
             try
             {
-                using (MySqlConnection con = new MySqlConnection(connectionString))
+                using (IDbConnection con = CrearConexion())
                 {
                     con.Open();
-                    MySqlCommand cmd = new MySqlCommand("INSERT INTO Maestros (Nombre) VALUES (@nombre)", con);
-                    cmd.Parameters.AddWithValue("@nombre", txtNombreMaestro.Text.Trim());
+                    IDbCommand cmd = con.CreateCommand();
+                    cmd.CommandText = "INSERT INTO Maestros (Nombre) VALUES (@nombre)";
+                    CrearParametro(cmd, "@nombre", txtNombreMaestro.Text.Trim());
                     cmd.ExecuteNonQuery();
                 }
-                MessageBox.Show("Maestro agregado correctamente.", "Éxito");
+                MessageBox.Show("Maestro agregado correctamente.");
                 txtNombreMaestro.Clear();
             }
-            catch (MySqlException ex)
-            {
-                MessageBox.Show("Error al guardar maestro: " + ex.Message, "Error");
-            }
+            catch (Exception ex) { MessageBox.Show("Error al guardar maestro: " + ex.Message); }
         }
 
-        // --- NUEVO MÉTODO PARA OBTENER DATOS DE VALIDACIÓN ---
         private List<HorarioSimple> ObtenerHorariosExistentes()
         {
             List<HorarioSimple> lista = new List<HorarioSimple>();
             try
             {
-                using (MySqlConnection con = new MySqlConnection(connectionString))
+                using (IDbConnection con = CrearConexion())
                 {
                     con.Open();
-                    string query = @"SELECT t2.Nombre as Maestro, t1.DiasImparte, t1.Hora 
-                             FROM Materias t1 
-                             INNER JOIN Maestros t2 ON t1.IdMaestro = t2.IdMaestro";
+                    IDbCommand cmd = con.CreateCommand();
+                    cmd.CommandText = @"SELECT t2.Nombre as Maestro, t1.DiasImparte, t1.Hora 
+                                      FROM Materias t1 
+                                      INNER JOIN Maestros t2 ON t1.IdMaestro = t2.IdMaestro";
 
-                    MySqlCommand cmd = new MySqlCommand(query, con);
-                    using (MySqlDataReader r = cmd.ExecuteReader())
+                    using (IDataReader r = cmd.ExecuteReader())
                     {
                         while (r.Read())
                         {
-                            // --- AQUÍ VA EL BLOQUE NUEVO ---
                             string horaDb = r["Hora"].ToString();
                             int horaI = 0;
-
                             try
                             {
-                                if (horaDb.Contains("-"))
-                                {
-                                    // Si es "08:00 - 10:00", toma el "08:00"
-                                    horaI = TimeSpan.Parse(horaDb.Split('-')[0].Trim()).Hours;
-                                }
-                                else
-                                {
-                                    // Si es solo "08:00:00"
-                                    horaI = TimeSpan.Parse(horaDb).Hours;
-                                }
+                                string primeraParte = horaDb.Contains("-") ? horaDb.Split('-')[0].Trim() : horaDb;
+                                horaI = TimeSpan.Parse(primeraParte).Hours;
                             }
-                            catch { /* En caso de dato mal formado, horaI queda en 0 */ }
-                            // ------------------------------
+                            catch { }
 
                             lista.Add(new HorarioSimple
                             {
                                 Maestro = r["Maestro"].ToString(),
                                 Dia = r["DiasImparte"].ToString(),
                                 HoraInicio = horaI,
-                                HoraFin = horaI + 1 // Mantenemos la lógica de bloques de 1h para validación
+                                HoraFin = horaI + 1
                             });
                         }
                     }
                 }
             }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Error al cargar lista de validación: " + ex.Message);
-            }
+            catch (Exception ex) { MessageBox.Show("Error de validación: " + ex.Message); }
             return lista;
         }
 
         private void GuardarMateria()
         {
-            // 1. Validaciones básicas de campos obligatorios
-            if (cmbMaestro.SelectedItem == null || string.IsNullOrWhiteSpace(txtNombreMateria.Text) || string.IsNullOrWhiteSpace(txtHora.Text))
+            if (cmbMaestro.SelectedItem == null)
             {
-                MessageBox.Show("Maestro, Materia y Hora son obligatorios.", "Validación");
+                MessageBox.Show("Por favor, seleccione un maestro antes de guardar.");
                 return;
             }
 
-            // 2. Lógica de Validación de Choque (Extraída del PDF)
-            try
-            {
-
-                // Extraemos la hora del TextBox (asumiendo formato HH:mm o HH:mm:ss)
-                string horaTexto = txtHora.Text.Split('-')[0].Trim(); // Toma lo que está antes del guion
-                int horaDigitada = TimeSpan.Parse(horaTexto).Hours;
-
-                List<HorarioSimple> listaHorarios = ObtenerHorariosExistentes();
-
-                var nuevo = new HorarioSimple
-                {
-                    Maestro = cmbMaestro.Text,
-                    Dia = txtDias.Text,
-                    HoraInicio = horaDigitada,
-                    HoraFin = horaDigitada + 1
-                };
-
-                if (ValidadorHorarios.HayChoque(nuevo, listaHorarios, out string mensaje))
-                {
-                    MessageBox.Show(mensaje, "Choque de horario", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    return;
-                }
-            }
-            catch
-            {
-                MessageBox.Show("Formato sugerido: 08:00 - 10:00", "Ayuda de Formato");
-                return;
-            }
-
-            // 3. Proceso de Guardado en Base de Datos
             try
             {
                 int idMaestro = ((ComboItem)cmbMaestro.SelectedItem).Id;
 
-                using (MySqlConnection con = new MySqlConnection(connectionString))
+                using (IDbConnection con = CrearConexion())
                 {
                     con.Open();
-                    string query = @"INSERT INTO Materias 
+                    IDbCommand cmd = con.CreateCommand();
+                    cmd.CommandText = @"INSERT INTO Materias 
                         (IdMateria, IdMaestro, Nombre, DiasImparte, Hora, HD_Credito, DiasMes, TotalCredito, Inscritos, Aula, Seccion, Credito)
                         VALUES (@idMateria, @idMaestro, @nombre, @dias, @hora, @hdCredito, @diasMes, @totalCredito, @inscritos, @aula, @seccion, @credito)";
 
-                    using (MySqlCommand cmd = new MySqlCommand(query, con))
-                    {
-                        cmd.Parameters.AddWithValue("@idMateria", ParseInt(txtIdMateria.Text));
-                        cmd.Parameters.AddWithValue("@idMaestro", idMaestro);
-                        cmd.Parameters.AddWithValue("@nombre", txtNombreMateria.Text.Trim());
-                        cmd.Parameters.AddWithValue("@dias", txtDias.Text.Trim());
-                        cmd.Parameters.AddWithValue("@hora", txtHora.Text.Trim());
-                        cmd.Parameters.AddWithValue("@hdCredito", ParseInt(txtHDCredito.Text));
-                        cmd.Parameters.AddWithValue("@diasMes", ParseInt(txtDiasMes.Text));
-                        cmd.Parameters.AddWithValue("@totalCredito", ParseInt(txtTotalCredito.Text));
-                        cmd.Parameters.AddWithValue("@inscritos", ParseInt(txtInscritos.Text));
-                        cmd.Parameters.AddWithValue("@aula", txtAula.Text.Trim());
-                        cmd.Parameters.AddWithValue("@seccion", txtSeccion.Text.Trim());
-                        cmd.Parameters.AddWithValue("@credito", ParseInt(txtCredito.Text));
-                        cmd.ExecuteNonQuery();
-                    }
+                    CrearParametro(cmd, "@idMateria", ParseInt(txtIdMateria.Text));
+                    CrearParametro(cmd, "@idMaestro", idMaestro);
+                    CrearParametro(cmd, "@nombre", txtNombreMateria.Text.Trim());
+                    CrearParametro(cmd, "@dias", txtDias.Text.Trim());
+                    CrearParametro(cmd, "@hora", txtHora.Text.Trim());
+                    CrearParametro(cmd, "@hdCredito", ParseInt(txtHDCredito.Text));
+                    CrearParametro(cmd, "@diasMes", ParseInt(txtDiasMes.Text));
+                    CrearParametro(cmd, "@totalCredito", ParseInt(txtTotalCredito.Text));
+                    CrearParametro(cmd, "@inscritos", ParseInt(txtInscritos.Text));
+                    CrearParametro(cmd, "@aula", txtAula.Text.Trim());
+                    CrearParametro(cmd, "@seccion", txtSeccion.Text.Trim());
+                    CrearParametro(cmd, "@credito", ParseInt(txtCredito.Text));
+
+                    cmd.ExecuteNonQuery();
                 }
-                MessageBox.Show("Materia agregada correctamente.", "Éxito");
+                MessageBox.Show("Materia agregada correctamente.");
                 LimpiarTabMateria();
             }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Error al guardar materia: " + ex.Message, "Error");
-            }
+            catch (Exception ex) { MessageBox.Show("Error al guardar materia: " + ex.Message); }
         }
 
         private void BtnCancelar_Click(object sender, EventArgs e) => this.Close();
@@ -232,9 +231,6 @@ namespace Gestor_de_Horarios_de_Maestros
             Id = id;
             Nombre = nombre;
         }
-        public override string ToString()
-        {
-            return Nombre;
-        }
+        public override string ToString() => Nombre;
     }
 }
