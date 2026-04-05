@@ -1,10 +1,11 @@
-﻿using System;
-using System.Data;
-using System.Data.SQLite;
-using MySql.Data.MySqlClient;
-using System.IO;
+﻿using MySql.Data.MySqlClient;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Data;
+using System.Data.SQLite;
+using System.IO;
+using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
 namespace Gestor_de_Horarios_de_Maestros
@@ -17,6 +18,7 @@ namespace Gestor_de_Horarios_de_Maestros
         public FormAgregar()
         {
             InitializeComponent();
+            cmbCuatrimestre.DropDownStyle = ComboBoxStyle.DropDownList;
         }
 
         // --- MÉTODOS DE CONEXIÓN HÍBRIDA ---
@@ -50,8 +52,12 @@ namespace Gestor_de_Horarios_de_Maestros
 
         private void TabControl_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (tabControl.SelectedIndex == 1)
+            // Índice 0: Maestro, Índice 1: Cuatrimestre, Índice 2: Materia
+            if (tabControl.SelectedIndex == 2)
+            {
                 CargarComboMaestros();
+                CargarComboCuatrimestres(); // Este es el método que creamos anteriormente
+            }
         }
 
         private void CargarComboMaestros()
@@ -170,26 +176,30 @@ namespace Gestor_de_Horarios_de_Maestros
 
         private void GuardarMateria()
         {
-            if (cmbMaestro.SelectedItem == null)
+            if (cmbMaestro.SelectedItem == null || cmbCuatrimestre.SelectedItem == null)
             {
-                MessageBox.Show("Por favor, seleccione un maestro antes de guardar.");
+                MessageBox.Show("Por favor, seleccione un maestro y un cuatrimestre antes de guardar.");
                 return;
             }
 
             try
             {
                 int idMaestro = ((ComboItem)cmbMaestro.SelectedItem).Id;
+                int idCuatrimestre = ((ComboItem)cmbCuatrimestre.SelectedItem).Id;
 
                 using (IDbConnection con = CrearConexion())
                 {
                     con.Open();
                     IDbCommand cmd = con.CreateCommand();
+
+                    // Agregamos IdCuatrimestre a la consulta y a los valores
                     cmd.CommandText = @"INSERT INTO Materias 
-                        (IdMateria, IdMaestro, Nombre, DiasImparte, Hora, HD_Credito, DiasMes, TotalCredito, Inscritos, Aula, Seccion, Credito)
-                        VALUES (@idMateria, @idMaestro, @nombre, @dias, @hora, @hdCredito, @diasMes, @totalCredito, @inscritos, @aula, @seccion, @credito)";
+                (IdMateria, IdMaestro, IdCuatrimestre, Nombre, DiasImparte, Hora, HD_Credito, DiasMes, TotalCredito, Inscritos, Aula, Seccion, Credito)
+                VALUES (@idMateria, @idMaestro, @idCuatrimestre, @nombre, @dias, @hora, @hdCredito, @diasMes, @totalCredito, @inscritos, @aula, @seccion, @credito)";
 
                     CrearParametro(cmd, "@idMateria", ParseInt(txtIdMateria.Text));
                     CrearParametro(cmd, "@idMaestro", idMaestro);
+                    CrearParametro(cmd, "@idCuatrimestre", idCuatrimestre); // Nuevo parámetro
                     CrearParametro(cmd, "@nombre", txtNombreMateria.Text.Trim());
                     CrearParametro(cmd, "@dias", txtDias.Text.Trim());
                     CrearParametro(cmd, "@hora", txtHora.Text.Trim());
@@ -219,7 +229,114 @@ namespace Gestor_de_Horarios_de_Maestros
         }
 
         private object ParseInt(string val) => int.TryParse(val, out int i) ? (object)i : DBNull.Value;
+
+        private void tabMaestro_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void FormAgregar_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void txtSeccion_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void lblNombreMaestro_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void txtNombreCuatrimestre_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void cerrarToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.DialogResult = DialogResult.Cancel;
+            this.Close();
+        }
+
+        private void maximizarToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (this.WindowState == FormWindowState.Normal)
+            {
+                this.WindowState = FormWindowState.Maximized;
+            }
+            else
+            {
+                this.WindowState = FormWindowState.Normal;
+            }
+            if (this.WindowState == FormWindowState.Normal)
+            {
+                this.WindowState = FormWindowState.Maximized;
+            }
+            else
+            {
+                this.WindowState = FormWindowState.Normal;
+            }
+        }
+
+        private void minimizarToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.WindowState = FormWindowState.Minimized;
+        }
+
+        [DllImport("user32.DLL", EntryPoint = "ReleaseCapture")]
+        private extern static void ReleaseCapture();
+
+        [DllImport("user32.DLL", EntryPoint = "SendMessage")]
+        private extern static void SendMessage(System.IntPtr hWnd, int wMsg, int wParam, int lParam);
+
+        private void MoverVentana()
+        {
+            ReleaseCapture();
+            SendMessage(this.Handle, 0x112, 0xf012, 0);
+        }
+        private void toolStrip1_MouseDown(object sender, MouseEventArgs e)
+        {
+            // Solo permitimos mover si se hace clic con el botón izquierdo
+            if (e.Button == MouseButtons.Left)
+            {
+                ReleaseCapture();
+                SendMessage(this.Handle, 0x112, 0xf012, 0);
+            }
+        }
+
+        private void CargarComboCuatrimestres()
+        {
+            try
+            {
+                using (IDbConnection con = CrearConexion())
+                {
+                    con.Open();
+                    IDbCommand cmd = con.CreateCommand();
+                    cmd.CommandText = "SELECT IdCuatrimestre, Nombre FROM Cuatrimestres ORDER BY IdCuatrimestre DESC";
+
+                    using (IDataReader reader = cmd.ExecuteReader())
+                    {
+                        cmbCuatrimestre.Items.Clear(); // Asegúrate de que el control se llame cmbCuatrimestre
+                        while (reader.Read())
+                        {
+                            cmbCuatrimestre.Items.Add(new ComboItem(reader.GetInt32(0), reader.GetString(1)));
+                        }
+                    }
+                }
+                if (cmbCuatrimestre.Items.Count > 0) cmbCuatrimestre.SelectedIndex = 0;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error al cargar cuatrimestres: " + ex.Message);
+            }
+        }
+
     }
+
+
 
     public class ComboItem
     {

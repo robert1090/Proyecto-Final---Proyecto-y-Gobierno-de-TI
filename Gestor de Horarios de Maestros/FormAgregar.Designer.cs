@@ -20,10 +20,15 @@
             lblNombreMaestro = new Label();
             txtNombreMaestro = new TextBox();
             tabCuatrimestre = new TabPage();
+            label15 = new Label();
+            label14 = new Label();
+            label13 = new Label();
             txtNombreCuatrimestre = new TextBox();
             dtpInicio = new DateTimePicker();
             dtpFin = new DateTimePicker();
             tabMateria = new TabPage();
+            label16 = new Label();
+            cmbCuatrimestre = new ComboBox();
             label12 = new Label();
             label11 = new Label();
             label10 = new Label();
@@ -65,13 +70,15 @@
             LC1 = new Label();
             LC2 = new Label();
             LC3 = new Label();
-            label13 = new Label();
-            label14 = new Label();
-            label15 = new Label();
+            menuStrip2 = new MenuStrip();
+            cerrarToolStripMenuItem2 = new ToolStripMenuItem();
+            maximizarToolStripMenuItem = new ToolStripMenuItem();
+            minimizarToolStripMenuItem = new ToolStripMenuItem();
             tabControl.SuspendLayout();
             tabMaestro.SuspendLayout();
             tabCuatrimestre.SuspendLayout();
             tabMateria.SuspendLayout();
+            menuStrip2.SuspendLayout();
             SuspendLayout();
             // 
             // tabControl
@@ -79,41 +86,46 @@
             tabControl.Controls.Add(tabMaestro);
             tabControl.Controls.Add(tabCuatrimestre);
             tabControl.Controls.Add(tabMateria);
-            tabControl.Location = new Point(12, 12);
+            tabControl.Location = new Point(12, 31);
             tabControl.Name = "tabControl";
             tabControl.SelectedIndex = 0;
-            tabControl.Size = new Size(435, 360);
+            tabControl.Size = new Size(435, 341);
             tabControl.TabIndex = 0;
             tabControl.SelectedIndexChanged += TabControl_SelectedIndexChanged;
             // 
             // tabMaestro
             // 
+            tabMaestro.BackColor = Color.FromArgb(45, 45, 48);
             tabMaestro.Controls.Add(lblNombreMaestro);
             tabMaestro.Controls.Add(txtNombreMaestro);
             tabMaestro.Location = new Point(4, 24);
             tabMaestro.Name = "tabMaestro";
-            tabMaestro.Size = new Size(427, 332);
+            tabMaestro.Size = new Size(427, 313);
             tabMaestro.TabIndex = 0;
             tabMaestro.Text = "Nuevo Maestro";
+            tabMaestro.Click += tabMaestro_Click;
             // 
             // lblNombreMaestro
             // 
             lblNombreMaestro.AutoSize = true;
-            lblNombreMaestro.Location = new Point(20, 30);
+            lblNombreMaestro.Location = new Point(14, 44);
             lblNombreMaestro.Name = "lblNombreMaestro";
             lblNombreMaestro.Size = new Size(119, 15);
             lblNombreMaestro.TabIndex = 0;
             lblNombreMaestro.Text = "Nombre del Maestro:";
+            lblNombreMaestro.Click += lblNombreMaestro_Click;
             // 
             // txtNombreMaestro
             // 
-            txtNombreMaestro.Location = new Point(20, 50);
+            txtNombreMaestro.BackColor = SystemColors.ScrollBar;
+            txtNombreMaestro.Location = new Point(14, 80);
             txtNombreMaestro.Name = "txtNombreMaestro";
             txtNombreMaestro.Size = new Size(300, 23);
             txtNombreMaestro.TabIndex = 1;
             // 
             // tabCuatrimestre
             // 
+            tabCuatrimestre.BackColor = Color.FromArgb(45, 45, 48);
             tabCuatrimestre.Controls.Add(label15);
             tabCuatrimestre.Controls.Add(label14);
             tabCuatrimestre.Controls.Add(label13);
@@ -122,21 +134,49 @@
             tabCuatrimestre.Controls.Add(dtpFin);
             tabCuatrimestre.Location = new Point(4, 24);
             tabCuatrimestre.Name = "tabCuatrimestre";
-            tabCuatrimestre.Size = new Size(427, 332);
+            tabCuatrimestre.Size = new Size(427, 313);
             tabCuatrimestre.TabIndex = 2;
             tabCuatrimestre.Text = "Nuevo Cuatrimestre";
             // 
+            // label15
+            // 
+            label15.AutoSize = true;
+            label15.Location = new Point(257, 59);
+            label15.Name = "label15";
+            label15.Size = new Size(38, 15);
+            label15.TabIndex = 5;
+            label15.Text = "Final: ";
+            // 
+            // label14
+            // 
+            label14.AutoSize = true;
+            label14.Location = new Point(62, 58);
+            label14.Name = "label14";
+            label14.Size = new Size(42, 15);
+            label14.TabIndex = 4;
+            label14.Text = "Inicio: ";
+            // 
+            // label13
+            // 
+            label13.AutoSize = true;
+            label13.Location = new Point(23, 20);
+            label13.Name = "label13";
+            label13.Size = new Size(81, 15);
+            label13.TabIndex = 3;
+            label13.Text = "Cuatrimestre: ";
+            // 
             // txtNombreCuatrimestre
             // 
-            txtNombreCuatrimestre.Location = new Point(110, 17);
+            txtNombreCuatrimestre.Location = new Point(129, 13);
             txtNombreCuatrimestre.Name = "txtNombreCuatrimestre";
             txtNombreCuatrimestre.Size = new Size(280, 23);
             txtNombreCuatrimestre.TabIndex = 0;
+            txtNombreCuatrimestre.TextChanged += txtNombreCuatrimestre_TextChanged;
             // 
             // dtpInicio
             // 
             dtpInicio.Format = DateTimePickerFormat.Short;
-            dtpInicio.Location = new Point(110, 52);
+            dtpInicio.Location = new Point(119, 53);
             dtpInicio.Name = "dtpInicio";
             dtpInicio.Size = new Size(120, 23);
             dtpInicio.TabIndex = 1;
@@ -151,6 +191,9 @@
             // 
             // tabMateria
             // 
+            tabMateria.BackColor = Color.FromArgb(45, 45, 48);
+            tabMateria.Controls.Add(label16);
+            tabMateria.Controls.Add(cmbCuatrimestre);
             tabMateria.Controls.Add(label12);
             tabMateria.Controls.Add(label11);
             tabMateria.Controls.Add(label10);
@@ -177,9 +220,26 @@
             tabMateria.Controls.Add(txtInscritos);
             tabMateria.Location = new Point(4, 24);
             tabMateria.Name = "tabMateria";
-            tabMateria.Size = new Size(427, 332);
+            tabMateria.Size = new Size(427, 313);
             tabMateria.TabIndex = 1;
             tabMateria.Text = "Nueva Materia";
+            // 
+            // label16
+            // 
+            label16.AutoSize = true;
+            label16.Location = new Point(196, 20);
+            label16.Name = "label16";
+            label16.Size = new Size(81, 15);
+            label16.TabIndex = 25;
+            label16.Text = "Cuatrimestre: ";
+            // 
+            // cmbCuatrimestre
+            // 
+            cmbCuatrimestre.FormattingEnabled = true;
+            cmbCuatrimestre.Location = new Point(283, 17);
+            cmbCuatrimestre.Name = "cmbCuatrimestre";
+            cmbCuatrimestre.Size = new Size(107, 23);
+            cmbCuatrimestre.TabIndex = 24;
             // 
             // label12
             // 
@@ -211,7 +271,7 @@
             // label9
             // 
             label9.AutoSize = true;
-            label9.Location = new Point(214, 160);
+            label9.Location = new Point(214, 158);
             label9.Name = "label9";
             label9.Size = new Size(37, 15);
             label9.TabIndex = 20;
@@ -283,6 +343,7 @@
             // label1
             // 
             label1.AutoSize = true;
+            label1.BackColor = Color.FromArgb(45, 45, 48);
             label1.Location = new Point(14, 20);
             label1.Name = "label1";
             label1.Size = new Size(64, 15);
@@ -327,9 +388,9 @@
             // 
             // txtAula
             // 
-            txtAula.Location = new Point(280, 157);
+            txtAula.Location = new Point(287, 155);
             txtAula.Name = "txtAula";
-            txtAula.Size = new Size(110, 23);
+            txtAula.Size = new Size(103, 23);
             txtAula.TabIndex = 5;
             // 
             // txtHDCredito
@@ -341,10 +402,11 @@
             // 
             // txtSeccion
             // 
-            txtSeccion.Location = new Point(280, 192);
+            txtSeccion.Location = new Point(287, 192);
             txtSeccion.Name = "txtSeccion";
-            txtSeccion.Size = new Size(110, 23);
+            txtSeccion.Size = new Size(103, 23);
             txtSeccion.TabIndex = 7;
+            txtSeccion.TextChanged += txtSeccion_TextChanged;
             // 
             // txtDiasMes
             // 
@@ -355,9 +417,9 @@
             // 
             // txtCredito
             // 
-            txtCredito.Location = new Point(280, 227);
+            txtCredito.Location = new Point(289, 229);
             txtCredito.Name = "txtCredito";
-            txtCredito.Size = new Size(110, 23);
+            txtCredito.Size = new Size(101, 23);
             txtCredito.TabIndex = 9;
             // 
             // txtTotalCredito
@@ -369,27 +431,33 @@
             // 
             // txtInscritos
             // 
-            txtInscritos.Location = new Point(280, 262);
+            txtInscritos.Location = new Point(289, 262);
             txtInscritos.Name = "txtInscritos";
-            txtInscritos.Size = new Size(110, 23);
+            txtInscritos.Size = new Size(101, 23);
             txtInscritos.TabIndex = 11;
             // 
             // btnGuardar
             // 
+            btnGuardar.BackColor = Color.Silver;
+            btnGuardar.ForeColor = SystemColors.ActiveCaptionText;
             btnGuardar.Location = new Point(230, 385);
             btnGuardar.Name = "btnGuardar";
             btnGuardar.Size = new Size(100, 35);
             btnGuardar.TabIndex = 1;
             btnGuardar.Text = "Guardar";
+            btnGuardar.UseVisualStyleBackColor = false;
             btnGuardar.Click += BtnGuardar_Click;
             // 
             // btnCancelar
             // 
+            btnCancelar.BackColor = Color.Silver;
+            btnCancelar.ForeColor = SystemColors.ActiveCaptionText;
             btnCancelar.Location = new Point(340, 385);
             btnCancelar.Name = "btnCancelar";
             btnCancelar.Size = new Size(100, 35);
             btnCancelar.TabIndex = 2;
             btnCancelar.Text = "Cancelar";
+            btnCancelar.UseVisualStyleBackColor = false;
             btnCancelar.Click += BtnCancelar_Click;
             // 
             // L1
@@ -497,43 +565,57 @@
             LC3.Size = new Size(100, 23);
             LC3.TabIndex = 0;
             // 
-            // label13
+            // menuStrip2
             // 
-            label13.AutoSize = true;
-            label13.Location = new Point(23, 20);
-            label13.Name = "label13";
-            label13.Size = new Size(81, 15);
-            label13.TabIndex = 3;
-            label13.Text = "Cuatrimestre: ";
+            menuStrip2.BackColor = Color.FromArgb(20, 20, 20);
+            menuStrip2.ImageScalingSize = new Size(20, 20);
+            menuStrip2.Items.AddRange(new ToolStripItem[] { cerrarToolStripMenuItem2, maximizarToolStripMenuItem, minimizarToolStripMenuItem });
+            menuStrip2.Location = new Point(0, 0);
+            menuStrip2.Name = "menuStrip2";
+            menuStrip2.Size = new Size(469, 28);
+            menuStrip2.TabIndex = 3;
+            menuStrip2.Text = "menuStrip2";
+            menuStrip2.MouseDown += toolStrip1_MouseDown;
             // 
-            // label14
+            // cerrarToolStripMenuItem2
             // 
-            label14.AutoSize = true;
-            label14.Location = new Point(62, 58);
-            label14.Name = "label14";
-            label14.Size = new Size(42, 15);
-            label14.TabIndex = 4;
-            label14.Text = "Inicio: ";
+            cerrarToolStripMenuItem2.Alignment = ToolStripItemAlignment.Right;
+            cerrarToolStripMenuItem2.Image = Properties.Resources.icon_icons__1_;
+            cerrarToolStripMenuItem2.Name = "cerrarToolStripMenuItem2";
+            cerrarToolStripMenuItem2.Size = new Size(32, 24);
+            cerrarToolStripMenuItem2.Click += cerrarToolStripMenuItem_Click;
             // 
-            // label15
+            // maximizarToolStripMenuItem
             // 
-            label15.AutoSize = true;
-            label15.Location = new Point(266, 58);
-            label15.Name = "label15";
-            label15.Size = new Size(38, 15);
-            label15.TabIndex = 5;
-            label15.Text = "Final: ";
+            maximizarToolStripMenuItem.Alignment = ToolStripItemAlignment.Right;
+            maximizarToolStripMenuItem.Image = Properties.Resources.maximizethewindow_theapplication_maximizar_2873;
+            maximizarToolStripMenuItem.Name = "maximizarToolStripMenuItem";
+            maximizarToolStripMenuItem.Size = new Size(32, 24);
+            maximizarToolStripMenuItem.Click += maximizarToolStripMenuItem_Click;
+            // 
+            // minimizarToolStripMenuItem
+            // 
+            minimizarToolStripMenuItem.Alignment = ToolStripItemAlignment.Right;
+            minimizarToolStripMenuItem.Image = Properties.Resources.minimize_thewindow_theapplication_2872;
+            minimizarToolStripMenuItem.Name = "minimizarToolStripMenuItem";
+            minimizarToolStripMenuItem.Size = new Size(32, 24);
+            minimizarToolStripMenuItem.Click += minimizarToolStripMenuItem_Click;
             // 
             // FormAgregar
             // 
-            ClientSize = new Size(460, 440);
+            BackColor = Color.FromArgb(45, 45, 48);
+            ClientSize = new Size(469, 452);
+            Controls.Add(menuStrip2);
             Controls.Add(tabControl);
             Controls.Add(btnGuardar);
             Controls.Add(btnCancelar);
-            FormBorderStyle = FormBorderStyle.FixedDialog;
+            ForeColor = SystemColors.ButtonHighlight;
+            FormBorderStyle = FormBorderStyle.None;
             Name = "FormAgregar";
             StartPosition = FormStartPosition.CenterParent;
             Text = "Agregar";
+            Load += FormAgregar_Load;
+            MouseDown += toolStrip1_MouseDown;
             tabControl.ResumeLayout(false);
             tabMaestro.ResumeLayout(false);
             tabMaestro.PerformLayout();
@@ -541,7 +623,10 @@
             tabCuatrimestre.PerformLayout();
             tabMateria.ResumeLayout(false);
             tabMateria.PerformLayout();
+            menuStrip2.ResumeLayout(false);
+            menuStrip2.PerformLayout();
             ResumeLayout(false);
+            PerformLayout();
         }
 
         private void Colocar(Label l, string t, int x, int y, Control p)
@@ -575,5 +660,11 @@
         private Label label15;
         private Label label14;
         private Label label13;
+        private MenuStrip menuStrip2;
+        private ToolStripMenuItem cerrarToolStripMenuItem2;
+        private ToolStripMenuItem maximizarToolStripMenuItem;
+        private ToolStripMenuItem minimizarToolStripMenuItem;
+        private ComboBox cmbCuatrimestre;
+        private Label label16;
     }
 }

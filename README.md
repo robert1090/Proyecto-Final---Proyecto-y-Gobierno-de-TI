@@ -69,3 +69,5 @@ También se recomienda realizar copias de seguridad periódicas de la base de da
 * José Angel Bello (23-SISN-2-015): Se agrego la opcion de eliminar al realizar doble click en el DataGridView.
 * Amauris Enmanuel Beras de la Cruz (21-Eisn-2-052): Se agrego la opcion de Registrar Cuatrimestre dentro de Agregar.
 * Robert Avila (23-SISN-2-001): Se agrego la opcion de conexion Local o Remota, modificaron todos los apartados para permitir la conexion en Modo Local o Remoto, se realizaron correciones menores.
+* Roberto Gabriel Nieves Jimenez (23-SISN-2-2051): Se modifico el apartado de Agregar Materia para asignar Cuatrimestre.
+* Alexander Torres Tapia (18-EISN-2-046): Se modificaron las ventanas de Asignar, Agregar, Modificar, Buscar e Imprimir para un Tema Oscuro.
