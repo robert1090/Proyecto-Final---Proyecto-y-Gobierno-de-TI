@@ -1,0 +1,54 @@
+D:\Folder\Programar\C#\Proyecto-Final---Proyecto-y-Gobierno-de-TI\Gestor de Horarios de Maestros\bin\Release\net10.0-windows\Gestor de Horarios de Maestros.exe
+D:\Folder\Programar\C#\Proyecto-Final---Proyecto-y-Gobierno-de-TI\Gestor de Horarios de Maestros\bin\Release\net10.0-windows\Gestor de Horarios de Maestros.dll.config
+D:\Folder\Programar\C#\Proyecto-Final---Proyecto-y-Gobierno-de-TI\Gestor de Horarios de Maestros\bin\Release\net10.0-windows\Gestor de Horarios de Maestros.deps.json
+D:\Folder\Programar\C#\Proyecto-Final---Proyecto-y-Gobierno-de-TI\Gestor de Horarios de Maestros\bin\Release\net10.0-windows\Gestor de Horarios de Maestros.runtimeconfig.json
+D:\Folder\Programar\C#\Proyecto-Final---Proyecto-y-Gobierno-de-TI\Gestor de Horarios de Maestros\bin\Release\net10.0-windows\Gestor de Horarios de Maestros.dll
+D:\Folder\Programar\C#\Proyecto-Final---Proyecto-y-Gobierno-de-TI\Gestor de Horarios de Maestros\bin\Release\net10.0-windows\Gestor de Horarios de Maestros.pdb
+D:\Folder\Programar\C#\Proyecto-Final---Proyecto-y-Gobierno-de-TI\Gestor de Horarios de Maestros\bin\Release\net10.0-windows\BouncyCastle.Cryptography.dll
+D:\Folder\Programar\C#\Proyecto-Final---Proyecto-y-Gobierno-de-TI\Gestor de Horarios de Maestros\bin\Release\net10.0-windows\Google.Protobuf.dll
+D:\Folder\Programar\C#\Proyecto-Final---Proyecto-y-Gobierno-de-TI\Gestor de Horarios de Maestros\bin\Release\net10.0-windows\itextsharp.dll
+D:\Folder\Programar\C#\Proyecto-Final---Proyecto-y-Gobierno-de-TI\Gestor de Horarios de Maestros\bin\Release\net10.0-windows\K4os.Compression.LZ4.dll
+D:\Folder\Programar\C#\Proyecto-Final---Proyecto-y-Gobierno-de-TI\Gestor de Horarios de Maestros\bin\Release\net10.0-windows\K4os.Compression.LZ4.Streams.dll
+D:\Folder\Programar\C#\Proyecto-Final---Proyecto-y-Gobierno-de-TI\Gestor de Horarios de Maestros\bin\Release\net10.0-windows\K4os.Hash.xxHash.dll
+D:\Folder\Programar\C#\Proyecto-Final---Proyecto-y-Gobierno-de-TI\Gestor de Horarios de Maestros\bin\Release\net10.0-windows\Microsoft.Extensions.DependencyInjection.Abstractions.dll
+D:\Folder\Programar\C#\Proyecto-Final---Proyecto-y-Gobierno-de-TI\Gestor de Horarios de Maestros\bin\Release\net10.0-windows\Microsoft.Extensions.Logging.Abstractions.dll
+D:\Folder\Programar\C#\Proyecto-Final---Proyecto-y-Gobierno-de-TI\Gestor de Horarios de Maestros\bin\Release\net10.0-windows\MySql.Data.dll
+D:\Folder\Programar\C#\Proyecto-Final---Proyecto-y-Gobierno-de-TI\Gestor de Horarios de Maestros\bin\Release\net10.0-windows\MySqlConnector.dll
+D:\Folder\Programar\C#\Proyecto-Final---Proyecto-y-Gobierno-de-TI\Gestor de Horarios de Maestros\bin\Release\net10.0-windows\System.Data.SQLite.dll
+D:\Folder\Programar\C#\Proyecto-Final---Proyecto-y-Gobierno-de-TI\Gestor de Horarios de Maestros\bin\Release\net10.0-windows\System.Data.SqlClient.dll
+D:\Folder\Programar\C#\Proyecto-Final---Proyecto-y-Gobierno-de-TI\Gestor de Horarios de Maestros\bin\Release\net10.0-windows\ZstdSharp.dll
+D:\Folder\Programar\C#\Proyecto-Final---Proyecto-y-Gobierno-de-TI\Gestor de Horarios de Maestros\bin\Release\net10.0-windows\runtimes\win-x64\native\comerr64.dll
+D:\Folder\Programar\C#\Proyecto-Final---Proyecto-y-Gobierno-de-TI\Gestor de Horarios de Maestros\bin\Release\net10.0-windows\runtimes\win-x64\native\gssapi64.dll
+D:\Folder\Programar\C#\Proyecto-Final---Proyecto-y-Gobierno-de-TI\Gestor de Horarios de Maestros\bin\Release\net10.0-windows\runtimes\win-x64\native\k5sprt64.dll
+D:\Folder\Programar\C#\Proyecto-Final---Proyecto-y-Gobierno-de-TI\Gestor de Horarios de Maestros\bin\Release\net10.0-windows\runtimes\win-x64\native\krb5_64.dll
+D:\Folder\Programar\C#\Proyecto-Final---Proyecto-y-Gobierno-de-TI\Gestor de Horarios de Maestros\bin\Release\net10.0-windows\runtimes\win-x64\native\krbcc64.dll
+D:\Folder\Programar\C#\Proyecto-Final---Proyecto-y-Gobierno-de-TI\Gestor de Horarios de Maestros\bin\Release\net10.0-windows\runtimes\win-arm64\native\sni.dll
+D:\Folder\Programar\C#\Proyecto-Final---Proyecto-y-Gobierno-de-TI\Gestor de Horarios de Maestros\bin\Release\net10.0-windows\runtimes\win-x64\native\sni.dll
+D:\Folder\Programar\C#\Proyecto-Final---Proyecto-y-Gobierno-de-TI\Gestor de Horarios de Maestros\bin\Release\net10.0-windows\runtimes\win-x86\native\sni.dll
+D:\Folder\Programar\C#\Proyecto-Final---Proyecto-y-Gobierno-de-TI\Gestor de Horarios de Maestros\bin\Release\net10.0-windows\runtimes\linux-x64\native\SQLite.Interop.dll
+D:\Folder\Programar\C#\Proyecto-Final---Proyecto-y-Gobierno-de-TI\Gestor de Horarios de Maestros\bin\Release\net10.0-windows\runtimes\osx-x64\native\SQLite.Interop.dll
+D:\Folder\Programar\C#\Proyecto-Final---Proyecto-y-Gobierno-de-TI\Gestor de Horarios de Maestros\bin\Release\net10.0-windows\runtimes\win-x64\native\SQLite.Interop.dll
+D:\Folder\Programar\C#\Proyecto-Final---Proyecto-y-Gobierno-de-TI\Gestor de Horarios de Maestros\bin\Release\net10.0-windows\runtimes\win-x86\native\SQLite.Interop.dll
+D:\Folder\Programar\C#\Proyecto-Final---Proyecto-y-Gobierno-de-TI\Gestor de Horarios de Maestros\bin\Release\net10.0-windows\runtimes\unix\lib\net8.0\System.Data.SqlClient.dll
+D:\Folder\Programar\C#\Proyecto-Final---Proyecto-y-Gobierno-de-TI\Gestor de Horarios de Maestros\bin\Release\net10.0-windows\runtimes\win\lib\net8.0\System.Data.SqlClient.dll
+D:\Folder\Programar\C#\Proyecto-Final---Proyecto-y-Gobierno-de-TI\Gestor de Horarios de Maestros\obj\Release\net10.0-windows\Gestor de Horarios de Maestros.csproj.AssemblyReference.cache
+D:\Folder\Programar\C#\Proyecto-Final---Proyecto-y-Gobierno-de-TI\Gestor de Horarios de Maestros\obj\Release\net10.0-windows\Gestor_de_Horarios_de_Maestros.ConfigConexion.resources
+D:\Folder\Programar\C#\Proyecto-Final---Proyecto-y-Gobierno-de-TI\Gestor de Horarios de Maestros\obj\Release\net10.0-windows\Gestor_de_Horarios_de_Maestros.FormAgregar.resources
+D:\Folder\Programar\C#\Proyecto-Final---Proyecto-y-Gobierno-de-TI\Gestor de Horarios de Maestros\obj\Release\net10.0-windows\Gestor_de_Horarios_de_Maestros.FormAsignar.resources
+D:\Folder\Programar\C#\Proyecto-Final---Proyecto-y-Gobierno-de-TI\Gestor de Horarios de Maestros\obj\Release\net10.0-windows\Gestor_de_Horarios_de_Maestros.FormBuscar.resources
+D:\Folder\Programar\C#\Proyecto-Final---Proyecto-y-Gobierno-de-TI\Gestor de Horarios de Maestros\obj\Release\net10.0-windows\Gestor_de_Horarios_de_Maestros.FormImprimir.resources
+D:\Folder\Programar\C#\Proyecto-Final---Proyecto-y-Gobierno-de-TI\Gestor de Horarios de Maestros\obj\Release\net10.0-windows\Gestor_de_Horarios_de_Maestros.FormModificar.resources
+D:\Folder\Programar\C#\Proyecto-Final---Proyecto-y-Gobierno-de-TI\Gestor de Horarios de Maestros\obj\Release\net10.0-windows\Gestor_de_Horarios_de_Maestros.Principal.resources
+D:\Folder\Programar\C#\Proyecto-Final---Proyecto-y-Gobierno-de-TI\Gestor de Horarios de Maestros\obj\Release\net10.0-windows\Gestor_de_Horarios_de_Maestros.Properties.Resources.resources
+D:\Folder\Programar\C#\Proyecto-Final---Proyecto-y-Gobierno-de-TI\Gestor de Horarios de Maestros\obj\Release\net10.0-windows\Gestor de Horarios de Maestros.csproj.GenerateResource.cache
+D:\Folder\Programar\C#\Proyecto-Final---Proyecto-y-Gobierno-de-TI\Gestor de Horarios de Maestros\obj\Release\net10.0-windows\Gestor de Horarios de Maestros.GeneratedMSBuildEditorConfig.editorconfig
+D:\Folder\Programar\C#\Proyecto-Final---Proyecto-y-Gobierno-de-TI\Gestor de Horarios de Maestros\obj\Release\net10.0-windows\Gestor de Horarios de Maestros.AssemblyInfoInputs.cache
+D:\Folder\Programar\C#\Proyecto-Final---Proyecto-y-Gobierno-de-TI\Gestor de Horarios de Maestros\obj\Release\net10.0-windows\Gestor de Horarios de Maestros.AssemblyInfo.cs
+D:\Folder\Programar\C#\Proyecto-Final---Proyecto-y-Gobierno-de-TI\Gestor de Horarios de Maestros\obj\Release\net10.0-windows\Gestor de Horarios de Maestros.csproj.CoreCompileInputs.cache
+D:\Folder\Programar\C#\Proyecto-Final---Proyecto-y-Gobierno-de-TI\Gestor de Horarios de Maestros\obj\Release\net10.0-windows\Gestor de Horarios de Maestros.sourcelink.json
+D:\Folder\Programar\C#\Proyecto-Final---Proyecto-y-Gobierno-de-TI\Gestor de Horarios de Maestros\obj\Release\net10.0-windows\Gestor d.E8044825.Up2Date
+D:\Folder\Programar\C#\Proyecto-Final---Proyecto-y-Gobierno-de-TI\Gestor de Horarios de Maestros\obj\Release\net10.0-windows\Gestor de Horarios de Maestros.dll
+D:\Folder\Programar\C#\Proyecto-Final---Proyecto-y-Gobierno-de-TI\Gestor de Horarios de Maestros\obj\Release\net10.0-windows\refint\Gestor de Horarios de Maestros.dll
+D:\Folder\Programar\C#\Proyecto-Final---Proyecto-y-Gobierno-de-TI\Gestor de Horarios de Maestros\obj\Release\net10.0-windows\Gestor de Horarios de Maestros.pdb
+D:\Folder\Programar\C#\Proyecto-Final---Proyecto-y-Gobierno-de-TI\Gestor de Horarios de Maestros\obj\Release\net10.0-windows\Gestor de Horarios de Maestros.genruntimeconfig.cache
+D:\Folder\Programar\C#\Proyecto-Final---Proyecto-y-Gobierno-de-TI\Gestor de Horarios de Maestros\obj\Release\net10.0-windows\ref\Gestor de Horarios de Maestros.dll

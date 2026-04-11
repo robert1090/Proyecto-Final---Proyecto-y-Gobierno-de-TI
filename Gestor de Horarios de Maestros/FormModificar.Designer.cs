@@ -12,104 +12,254 @@
 
         private void InitializeComponent()
         {
-            this.tabControl = new System.Windows.Forms.TabControl();
-            this.tabMaestro = new System.Windows.Forms.TabPage();
-            this.tabMateria = new System.Windows.Forms.TabPage();
-            this.cmbMaestros = new System.Windows.Forms.ComboBox();
-            this.txtNuevoNombre = new System.Windows.Forms.TextBox();
-            this.cmbMaterias = new System.Windows.Forms.ComboBox();
-            this.cmbMaestroAsoc = new System.Windows.Forms.ComboBox();
-            this.txtIdMateria = new System.Windows.Forms.TextBox();
-            this.txtNombreM = new System.Windows.Forms.TextBox();
-            this.txtDias = new System.Windows.Forms.TextBox();
-            this.txtHora = new System.Windows.Forms.TextBox();
-            this.txtAula = new System.Windows.Forms.TextBox();
-            this.txtHDCredito = new System.Windows.Forms.TextBox();
-            this.txtSeccion = new System.Windows.Forms.TextBox();
-            this.txtDiasMes = new System.Windows.Forms.TextBox();
-            this.txtCredito = new System.Windows.Forms.TextBox();
-            this.txtTotalCredito = new System.Windows.Forms.TextBox();
-            this.txtInscritos = new System.Windows.Forms.TextBox();
-            this.btnGuardar = new System.Windows.Forms.Button();
-            this.btnCancelar = new System.Windows.Forms.Button();
-
-            this.SuspendLayout();
-
-            // TabControl
-            this.tabControl.Controls.Add(this.tabMaestro);
-            this.tabControl.Controls.Add(this.tabMateria);
-            this.tabControl.Location = new System.Drawing.Point(12, 12);
-            this.tabControl.Size = new System.Drawing.Size(430, 390);
-
-            // TAB MAESTRO
-            this.tabMaestro.Text = "Maestro";
-            this.AgregarL(tabMaestro, "Seleccionar maestro:", 15, 20);
-            this.cmbMaestros.Location = new System.Drawing.Point(15, 40);
-            this.cmbMaestros.Size = new System.Drawing.Size(350, 23);
-            this.cmbMaestros.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbMaestros.SelectedIndexChanged += new System.EventHandler(this.CmbMaestros_SelectedIndexChanged);
-            this.AgregarL(tabMaestro, "Nuevo nombre:", 15, 80);
-            this.txtNuevoNombre.Location = new System.Drawing.Point(15, 100);
-            this.txtNuevoNombre.Size = new System.Drawing.Size(350, 23);
-            this.tabMaestro.Controls.AddRange(new System.Windows.Forms.Control[] { cmbMaestros, txtNuevoNombre });
-
-            // TAB MATERIA
-            this.tabMateria.Text = "Materia";
-            this.AgregarL(tabMateria, "1. Elija Materia a editar:", 15, 15);
-            this.cmbMaterias.Location = new System.Drawing.Point(15, 35);
-            this.cmbMaterias.Size = new System.Drawing.Size(380, 23);
-            this.cmbMaterias.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbMaterias.SelectedIndexChanged += new System.EventHandler(this.CmbMaterias_SelectedIndexChanged);
-            this.tabMateria.Controls.Add(cmbMaterias);
-
-            // Campos de edición
-            this.Config(txtIdMateria, "ID Materia:", 15, 75, 110, 80, tabMateria);
-            this.Config(cmbMaestroAsoc, "Maestro:", 210, 75, 270, 125, tabMateria);
-            this.cmbMaestroAsoc.DropDownStyle = ComboBoxStyle.DropDownList;
-
-            this.Config(txtNombreM, "Materia:", 15, 110, 110, 285, tabMateria);
-            this.Config(txtDias, "Días:", 15, 145, 110, 285, tabMateria);
-
-            this.Config(txtHora, "Hora:", 15, 180, 110, 90, tabMateria);
-            this.Config(txtAula, "Aula:", 220, 180, 280, 115, tabMateria);
-
-            this.Config(txtHDCredito, "H/D Cred:", 15, 215, 110, 90, tabMateria);
-            this.Config(txtSeccion, "Sección:", 220, 215, 280, 115, tabMateria);
-
-            this.Config(txtDiasMes, "Días/Mes:", 15, 250, 110, 90, tabMateria);
-            this.Config(txtCredito, "Créditos:", 220, 250, 280, 115, tabMateria);
-
-            this.Config(txtTotalCredito, "Total Cred:", 15, 285, 110, 90, tabMateria);
-            this.Config(txtInscritos, "Inscritos:", 220, 285, 280, 115, tabMateria);
-
-            // BOTONES
-            this.btnGuardar.Text = "💾 Guardar";
-            this.btnGuardar.Location = new System.Drawing.Point(215, 415);
-            this.btnGuardar.Size = new System.Drawing.Size(120, 35);
-            this.btnGuardar.Click += new System.EventHandler(this.BtnGuardar_Click);
-            this.btnCancelar.Text = "Cancelar";
-            this.btnCancelar.Location = new System.Drawing.Point(345, 415);
-            this.btnCancelar.Size = new System.Drawing.Size(100, 35);
-            this.btnCancelar.Click += new System.EventHandler(this.BtnCancelar_Click);
-
-            this.ClientSize = new System.Drawing.Size(465, 465);
-            this.Controls.AddRange(new System.Windows.Forms.Control[] { tabControl, btnGuardar, btnCancelar });
-            this.FormBorderStyle = FormBorderStyle.FixedDialog;
-            this.StartPosition = FormStartPosition.CenterParent;
-            this.Text = "Modificar Registros";
-            this.ResumeLayout(false);
-        }
-
-        private void Config(System.Windows.Forms.Control c, string t, int lx, int ty, int tx, int tw, System.Windows.Forms.Control p)
-        {
-            System.Windows.Forms.Label l = new System.Windows.Forms.Label { Text = t, Location = new System.Drawing.Point(lx, ty + 3), AutoSize = true };
-            c.Location = new System.Drawing.Point(tx, ty); c.Width = tw;
-            p.Controls.Add(l); p.Controls.Add(c);
-        }
-
-        private void AgregarL(System.Windows.Forms.Control p, string t, int x, int y)
-        {
-            p.Controls.Add(new System.Windows.Forms.Label { Text = t, Location = new System.Drawing.Point(x, y), AutoSize = true });
+            tabControl = new TabControl();
+            tabMaestro = new TabPage();
+            cmbMaestros = new ComboBox();
+            txtNuevoNombre = new TextBox();
+            tabMateria = new TabPage();
+            cmbMaterias = new ComboBox();
+            cmbMaestroAsoc = new ComboBox();
+            txtIdMateria = new TextBox();
+            txtNombreM = new TextBox();
+            txtDias = new TextBox();
+            txtHora = new TextBox();
+            txtAula = new TextBox();
+            txtHDCredito = new TextBox();
+            txtSeccion = new TextBox();
+            txtDiasMes = new TextBox();
+            txtCredito = new TextBox();
+            txtTotalCredito = new TextBox();
+            txtInscritos = new TextBox();
+            btnGuardar = new Button();
+            btnCancelar = new Button();
+            menuStrip2 = new MenuStrip();
+            cerrarToolStripMenuItem6 = new ToolStripMenuItem();
+            maximizarToolStripMenuItem = new ToolStripMenuItem();
+            minimizarToolStripMenuItem = new ToolStripMenuItem();
+            tabControl.SuspendLayout();
+            tabMaestro.SuspendLayout();
+            tabMateria.SuspendLayout();
+            menuStrip2.SuspendLayout();
+            SuspendLayout();
+            // 
+            // tabControl
+            // 
+            tabControl.Controls.Add(tabMaestro);
+            tabControl.Controls.Add(tabMateria);
+            tabControl.Location = new Point(12, 31);
+            tabControl.Name = "tabControl";
+            tabControl.SelectedIndex = 0;
+            tabControl.Size = new Size(430, 371);
+            tabControl.TabIndex = 0;
+            // 
+            // tabMaestro
+            // 
+            tabMaestro.BackColor = Color.FromArgb(45, 45, 48);
+            tabMaestro.Controls.Add(cmbMaestros);
+            tabMaestro.Controls.Add(txtNuevoNombre);
+            tabMaestro.Location = new Point(4, 24);
+            tabMaestro.Name = "tabMaestro";
+            tabMaestro.Size = new Size(422, 343);
+            tabMaestro.TabIndex = 0;
+            tabMaestro.Text = "Maestro";
+            tabMaestro.Click += tabMaestro_Click;
+            // 
+            // cmbMaestros
+            // 
+            cmbMaestros.DropDownStyle = ComboBoxStyle.DropDownList;
+            cmbMaestros.Location = new Point(15, 62);
+            cmbMaestros.Name = "cmbMaestros";
+            cmbMaestros.Size = new Size(350, 23);
+            cmbMaestros.TabIndex = 0;
+            cmbMaestros.SelectedIndexChanged += CmbMaestros_SelectedIndexChanged;
+            // 
+            // txtNuevoNombre
+            // 
+            txtNuevoNombre.Location = new Point(15, 122);
+            txtNuevoNombre.Name = "txtNuevoNombre";
+            txtNuevoNombre.Size = new Size(350, 23);
+            txtNuevoNombre.TabIndex = 1;
+            // 
+            // tabMateria
+            // 
+            tabMateria.BackColor = Color.FromArgb(45, 45, 48);
+            tabMateria.Controls.Add(cmbMaterias);
+            tabMateria.Location = new Point(4, 24);
+            tabMateria.Name = "tabMateria";
+            tabMateria.Size = new Size(422, 343);
+            tabMateria.TabIndex = 1;
+            tabMateria.Text = "Materia";
+            // 
+            // cmbMaterias
+            // 
+            cmbMaterias.DropDownStyle = ComboBoxStyle.DropDownList;
+            cmbMaterias.Location = new Point(15, 35);
+            cmbMaterias.Name = "cmbMaterias";
+            cmbMaterias.Size = new Size(380, 23);
+            cmbMaterias.TabIndex = 0;
+            cmbMaterias.SelectedIndexChanged += CmbMaterias_SelectedIndexChanged;
+            // 
+            // cmbMaestroAsoc
+            // 
+            cmbMaestroAsoc.DropDownStyle = ComboBoxStyle.DropDownList;
+            cmbMaestroAsoc.Location = new Point(0, 0);
+            cmbMaestroAsoc.Name = "cmbMaestroAsoc";
+            cmbMaestroAsoc.Size = new Size(121, 23);
+            cmbMaestroAsoc.TabIndex = 0;
+            // 
+            // txtIdMateria
+            // 
+            txtIdMateria.Location = new Point(0, 0);
+            txtIdMateria.Name = "txtIdMateria";
+            txtIdMateria.Size = new Size(100, 23);
+            txtIdMateria.TabIndex = 0;
+            // 
+            // txtNombreM
+            // 
+            txtNombreM.Location = new Point(0, 0);
+            txtNombreM.Name = "txtNombreM";
+            txtNombreM.Size = new Size(100, 23);
+            txtNombreM.TabIndex = 0;
+            // 
+            // txtDias
+            // 
+            txtDias.Location = new Point(0, 0);
+            txtDias.Name = "txtDias";
+            txtDias.Size = new Size(100, 23);
+            txtDias.TabIndex = 0;
+            // 
+            // txtHora
+            // 
+            txtHora.Location = new Point(0, 0);
+            txtHora.Name = "txtHora";
+            txtHora.Size = new Size(100, 23);
+            txtHora.TabIndex = 0;
+            // 
+            // txtAula
+            // 
+            txtAula.Location = new Point(0, 0);
+            txtAula.Name = "txtAula";
+            txtAula.Size = new Size(100, 23);
+            txtAula.TabIndex = 0;
+            // 
+            // txtHDCredito
+            // 
+            txtHDCredito.Location = new Point(0, 0);
+            txtHDCredito.Name = "txtHDCredito";
+            txtHDCredito.Size = new Size(100, 23);
+            txtHDCredito.TabIndex = 0;
+            // 
+            // txtSeccion
+            // 
+            txtSeccion.Location = new Point(0, 0);
+            txtSeccion.Name = "txtSeccion";
+            txtSeccion.Size = new Size(100, 23);
+            txtSeccion.TabIndex = 0;
+            // 
+            // txtDiasMes
+            // 
+            txtDiasMes.Location = new Point(0, 0);
+            txtDiasMes.Name = "txtDiasMes";
+            txtDiasMes.Size = new Size(100, 23);
+            txtDiasMes.TabIndex = 0;
+            // 
+            // txtCredito
+            // 
+            txtCredito.Location = new Point(0, 0);
+            txtCredito.Name = "txtCredito";
+            txtCredito.Size = new Size(100, 23);
+            txtCredito.TabIndex = 0;
+            // 
+            // txtTotalCredito
+            // 
+            txtTotalCredito.Location = new Point(0, 0);
+            txtTotalCredito.Name = "txtTotalCredito";
+            txtTotalCredito.Size = new Size(100, 23);
+            txtTotalCredito.TabIndex = 0;
+            // 
+            // txtInscritos
+            // 
+            txtInscritos.Location = new Point(0, 0);
+            txtInscritos.Name = "txtInscritos";
+            txtInscritos.Size = new Size(100, 23);
+            txtInscritos.TabIndex = 0;
+            // 
+            // btnGuardar
+            // 
+            btnGuardar.ForeColor = SystemColors.ButtonHighlight;
+            btnGuardar.Location = new Point(215, 415);
+            btnGuardar.Name = "btnGuardar";
+            btnGuardar.Size = new Size(120, 35);
+            btnGuardar.TabIndex = 1;
+            btnGuardar.Text = "💾 Guardar";
+            btnGuardar.Click += BtnGuardar_Click;
+            // 
+            // btnCancelar
+            // 
+            btnCancelar.ForeColor = SystemColors.ButtonHighlight;
+            btnCancelar.Location = new Point(345, 415);
+            btnCancelar.Name = "btnCancelar";
+            btnCancelar.Size = new Size(100, 35);
+            btnCancelar.TabIndex = 2;
+            btnCancelar.Text = "Cancelar";
+            btnCancelar.Click += BtnCancelar_Click;
+            // 
+            // menuStrip2
+            // 
+            menuStrip2.BackColor = Color.FromArgb(20, 20, 20);
+            menuStrip2.ImageScalingSize = new Size(20, 20);
+            menuStrip2.Items.AddRange(new ToolStripItem[] { cerrarToolStripMenuItem6, maximizarToolStripMenuItem, minimizarToolStripMenuItem });
+            menuStrip2.Location = new Point(0, 0);
+            menuStrip2.Name = "menuStrip2";
+            menuStrip2.Size = new Size(465, 28);
+            menuStrip2.TabIndex = 3;
+            menuStrip2.Text = "menuStrip2";
+            menuStrip2.MouseDown += toolStrip1_MouseDown;
+            // 
+            // cerrarToolStripMenuItem6
+            // 
+            cerrarToolStripMenuItem6.Alignment = ToolStripItemAlignment.Right;
+            cerrarToolStripMenuItem6.Image = Properties.Resources.icon_icons__1_;
+            cerrarToolStripMenuItem6.Name = "cerrarToolStripMenuItem6";
+            cerrarToolStripMenuItem6.Size = new Size(32, 24);
+            cerrarToolStripMenuItem6.Click += cerrarToolStripMenuItem6_Click;
+            // 
+            // maximizarToolStripMenuItem
+            // 
+            maximizarToolStripMenuItem.Alignment = ToolStripItemAlignment.Right;
+            maximizarToolStripMenuItem.Image = Properties.Resources.maximizethewindow_theapplication_maximizar_2873;
+            maximizarToolStripMenuItem.Name = "maximizarToolStripMenuItem";
+            maximizarToolStripMenuItem.Size = new Size(32, 24);
+            maximizarToolStripMenuItem.Click += maximizarToolStripMenuItem_Click;
+            // 
+            // minimizarToolStripMenuItem
+            // 
+            minimizarToolStripMenuItem.Alignment = ToolStripItemAlignment.Right;
+            minimizarToolStripMenuItem.Image = Properties.Resources.minimize_thewindow_theapplication_2872;
+            minimizarToolStripMenuItem.Name = "minimizarToolStripMenuItem";
+            minimizarToolStripMenuItem.Size = new Size(32, 24);
+            minimizarToolStripMenuItem.Click += minimizarToolStripMenuItem_Click;
+            // 
+            // FormModificar
+            // 
+            BackColor = Color.FromArgb(20, 20, 20);
+            ClientSize = new Size(465, 465);
+            Controls.Add(menuStrip2);
+            Controls.Add(tabControl);
+            Controls.Add(btnGuardar);
+            Controls.Add(btnCancelar);
+            FormBorderStyle = FormBorderStyle.None;
+            Name = "FormModificar";
+            StartPosition = FormStartPosition.CenterParent;
+            Text = "Modificar Registros";
+            tabControl.ResumeLayout(false);
+            tabMaestro.ResumeLayout(false);
+            tabMaestro.PerformLayout();
+            tabMateria.ResumeLayout(false);
+            menuStrip2.ResumeLayout(false);
+            menuStrip2.PerformLayout();
+            ResumeLayout(false);
+            PerformLayout();
         }
 
         private System.Windows.Forms.TabControl tabControl;
@@ -117,5 +267,9 @@
         private System.Windows.Forms.ComboBox cmbMaestros, cmbMaterias, cmbMaestroAsoc;
         private System.Windows.Forms.TextBox txtNuevoNombre, txtIdMateria, txtNombreM, txtDias, txtHora, txtHDCredito, txtDiasMes, txtInscritos, txtAula, txtSeccion, txtCredito, txtTotalCredito;
         private System.Windows.Forms.Button btnGuardar, btnCancelar;
+        private MenuStrip menuStrip2;
+        private ToolStripMenuItem cerrarToolStripMenuItem6;
+        private ToolStripMenuItem maximizarToolStripMenuItem;
+        private ToolStripMenuItem minimizarToolStripMenuItem;
     }
 }

@@ -1,11 +1,12 @@
-﻿using System;
+﻿using MySql.Data.MySqlClient;
+using System;
+using System.Collections.Generic;
 using System.Configuration;
-using System.Windows.Forms;
 using System.Data;
 using System.Data.SQLite;
-using MySql.Data.MySqlClient;
-using System.Collections.Generic;
 using System.IO;
+using System.Runtime.InteropServices;
+using System.Windows.Forms;
 
 namespace Gestor_de_Horarios_de_Maestros
 {
@@ -17,7 +18,57 @@ namespace Gestor_de_Horarios_de_Maestros
         public FormModificar()
         {
             InitializeComponent();
+            // Ejecutamos la configuración manual para que el Designer no la borre
+            ConfigurarDisenoPersonalizado();
             CargarCombosIniciales();
+        }
+
+        private void ConfigurarDisenoPersonalizado()
+        {
+            // TAB MAESTRO - Labels manuales
+            AgregarL(tabMaestro, "Seleccionar maestro:", 15, 45);
+            AgregarL(tabMaestro, "Nuevo nombre:", 15, 105);
+
+            // TAB MATERIA - Labels y Posicionamiento
+            AgregarL(tabMateria, "1. Elija Materia a editar:", 15, 15);
+
+            // Aquí usamos tu método Config para reubicar los TXT y crear sus Labels
+            Config(txtIdMateria, "ID Materia:", 15, 75, 110, 80, tabMateria);
+            Config(cmbMaestroAsoc, "Maestro:", 210, 75, 270, 125, tabMateria);
+
+            Config(txtNombreM, "Materia:", 15, 110, 110, 285, tabMateria);
+            Config(txtDias, "Días:", 15, 145, 110, 285, tabMateria);
+
+            Config(txtHora, "Hora:", 15, 180, 110, 90, tabMateria);
+            Config(txtAula, "Aula:", 220, 180, 280, 115, tabMateria);
+
+            Config(txtHDCredito, "H/D Cred:", 15, 215, 110, 90, tabMateria);
+            Config(txtSeccion, "Sección:", 220, 215, 280, 115, tabMateria);
+
+            Config(txtDiasMes, "Días/Mes:", 15, 250, 110, 90, tabMateria);
+            Config(txtCredito, "Créditos:", 220, 250, 280, 115, tabMateria);
+
+            Config(txtTotalCredito, "Total Cred:", 15, 285, 110, 90, tabMateria);
+            Config(txtInscritos, "Inscritos:", 220, 285, 280, 115, tabMateria);
+
+            // Forzamos que los controles estén dentro de sus pestañas (por si el designer los sacó)
+            if (!tabMaestro.Controls.Contains(cmbMaestros)) tabMaestro.Controls.Add(cmbMaestros);
+            if (!tabMaestro.Controls.Contains(txtNuevoNombre)) tabMaestro.Controls.Add(txtNuevoNombre);
+        }
+
+        // Asegúrate de que estos métodos existan en FormModificar.cs (puedes moverlos desde el designer)
+        private void Config(System.Windows.Forms.Control c, string t, int lx, int ty, int tx, int tw, System.Windows.Forms.Control p)
+        {
+            System.Windows.Forms.Label l = new System.Windows.Forms.Label { Text = t, Location = new System.Drawing.Point(lx, ty + 3), AutoSize = true, ForeColor = System.Drawing.Color.White };
+            c.Location = new System.Drawing.Point(tx, ty);
+            c.Width = tw;
+            p.Controls.Add(l);
+            p.Controls.Add(c);
+        }
+
+        private void AgregarL(System.Windows.Forms.Control p, string t, int x, int y)
+        {
+            p.Controls.Add(new System.Windows.Forms.Label { Text = t, Location = new System.Drawing.Point(x, y), AutoSize = true, ForeColor = System.Drawing.Color.White });
         }
 
         // --- MÉTODOS DE CONEXIÓN HÍBRIDA ---
@@ -259,5 +310,54 @@ namespace Gestor_de_Horarios_de_Maestros
         private object ParseInt(string v) => int.TryParse(v, out int i) ? (object)i : DBNull.Value;
         private void BtnCancelar_Click(object sender, EventArgs e) => this.Close();
         private void CmbMaestros_SelectedIndexChanged(object sender, EventArgs e) { if (cmbMaestros.SelectedItem is ComboItem i) txtNuevoNombre.Text = i.Nombre; }
+
+        private void tabMaestro_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void maximizarToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (this.WindowState == FormWindowState.Normal)
+            {
+                this.WindowState = FormWindowState.Maximized;
+            }
+            else
+            {
+                this.WindowState = FormWindowState.Normal;
+            }
+        }
+
+        private void minimizarToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.WindowState = FormWindowState.Minimized;
+        }
+
+        private void cerrarToolStripMenuItem6_Click(object sender, EventArgs e)
+        {
+            this.DialogResult = DialogResult.Cancel;
+            this.Close();
+        }
+
+        [DllImport("user32.DLL", EntryPoint = "ReleaseCapture")]
+        private extern static void ReleaseCapture();
+
+        [DllImport("user32.DLL", EntryPoint = "SendMessage")]
+        private extern static void SendMessage(System.IntPtr hWnd, int wMsg, int wParam, int lParam);
+
+        private void MoverVentana()
+        {
+            ReleaseCapture();
+            SendMessage(this.Handle, 0x112, 0xf012, 0);
+        }
+        private void toolStrip1_MouseDown(object sender, MouseEventArgs e)
+        {
+            // Solo permitimos mover si se hace clic con el botón izquierdo
+            if (e.Button == MouseButtons.Left)
+            {
+                ReleaseCapture();
+                SendMessage(this.Handle, 0x112, 0xf012, 0);
+            }
+        }
     }
 }
