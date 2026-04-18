@@ -7,6 +7,7 @@ using System.Data.Common;
 using System.Data.SQLite;
 using System.IO;
 using System.Runtime.InteropServices;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace Gestor_de_Horarios_de_Maestros
 {
@@ -114,6 +115,7 @@ namespace Gestor_de_Horarios_de_Maestros
             try
             {
                 CargarComboMaestros();
+                CargarComboCuatrimestres();
                 CargarGrid();
             }
             catch (MySqlException)
@@ -231,7 +233,7 @@ namespace Gestor_de_Horarios_de_Maestros
             comboBox1.ValueMember = "IdMaestro";
         }
 
-        private void CargarGrid(string nombreMaestro = "", string seccion = "", string dia = "", string credito = "", string hora = "")
+        private void CargarGrid(string nombreMaestro = "", string seccion = "", string dia = "", string credito = "", string hora = "", string cuatrimestre = "")
         {
             try
             {
@@ -266,6 +268,11 @@ namespace Gestor_de_Horarios_de_Maestros
                     if (!string.IsNullOrEmpty(dia)) { query += " AND DiasImparte LIKE @dia"; CrearParametro(cmd, "@dia", "%" + dia + "%"); }
                     if (!string.IsNullOrEmpty(credito)) { query += " AND Credito = @credito"; CrearParametro(cmd, "@credito", credito); }
                     if (!string.IsNullOrEmpty(hora)) { query += " AND Hora LIKE @hora"; CrearParametro(cmd, "@hora", "%" + hora + "%"); }
+                    if (!string.IsNullOrEmpty(cuatrimestre) && !cuatrimestre.Contains("Todos") && !cuatrimestre.Contains("DataRowView"))
+                    {
+                        query += " AND Cuatrimestre LIKE @cuatrimestre";
+                        CrearParametro(cmd, "@cuatrimestre", "%" + cuatrimestre + "%");
+                    }
 
                     query += " ORDER BY MaestroNombre ASC";
                     cmd.CommandText = query;
@@ -299,14 +306,56 @@ namespace Gestor_de_Horarios_de_Maestros
 
         private void btnBuscar_Click(object sender, EventArgs e)
         {
-            CargarGrid(comboBox1.Text);
+            string cuatrimestre = comboBox2.SelectedValue?.ToString() == "0" ? "" : comboBox2.Text;
+            CargarGrid(comboBox1.Text, "", "", "", "", cuatrimestre);
         }
 
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (comboBox1.Focused && comboBox1.SelectedIndex != -1)
             {
-                CargarGrid(comboBox1.Text, "", "", "", "");
+                CargarGrid(comboBox1.Text, "", "", "", "", comboBox2.SelectedValue?.ToString() == "0" ? "" : comboBox2.Text);
+            }
+        }
+
+        private void CargarComboCuatrimestres()
+        {
+            DataTable dt = new DataTable();
+            dt.Columns.Add("IdCuatrimestre", typeof(int));
+            dt.Columns.Add("Nombre", typeof(string));
+
+            try
+            {
+                using (IDbConnection con = CrearConexion())
+                {
+                    string query = "SELECT IdCuatrimestre, Nombre FROM Cuatrimestres ORDER BY Nombre ASC";
+                    IDataAdapter da = CrearAdapter(query, con);
+                    if (da is SQLiteDataAdapter sda) sda.Fill(dt);
+                    else if (da is MySqlDataAdapter mda) mda.Fill(dt);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error al cargar cuatrimestres: " + ex.Message);
+            }
+
+            DataRow filaTodos = dt.NewRow();
+            filaTodos["IdCuatrimestre"] = 0;
+            filaTodos["Nombre"] = "📅 Todos";
+            dt.Rows.InsertAt(filaTodos, 0);
+
+            comboBox2.DataSource = dt;
+            comboBox2.DisplayMember = "Nombre";
+            comboBox2.ValueMember = "IdCuatrimestre";
+        }
+
+        private void comboBox2_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (comboBox2.Focused && comboBox2.SelectedIndex != -1)
+            {
+                string cuatrimestre = comboBox2.SelectedValue?.ToString() == "0" ? "" : comboBox2.Text;
+                string maestro = comboBox1.SelectedValue?.ToString() == "0" ? "" : comboBox1.Text;
+                CargarGrid(maestro, "", "", "", "", cuatrimestre);
             }
         }
 

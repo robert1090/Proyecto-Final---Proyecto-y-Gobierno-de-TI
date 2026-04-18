@@ -33,6 +33,8 @@
             panelFiltro = new Panel();
             label1 = new Label();
             comboBox1 = new ComboBox();
+            label2 = new Label();
+            comboBox2 = new ComboBox();
             btnBuscar = new Button();
             dataGridView1 = new DataGridView();
             menuStrip2 = new MenuStrip();
@@ -124,6 +126,8 @@
             panelFiltro.BackColor = Color.FromArgb(55, 55, 60);
             panelFiltro.Controls.Add(label1);
             panelFiltro.Controls.Add(comboBox1);
+            panelFiltro.Controls.Add(label2);
+            panelFiltro.Controls.Add(comboBox2);
             panelFiltro.Controls.Add(btnBuscar);
             panelFiltro.Location = new Point(12, 51);
             panelFiltro.Name = "panelFiltro";
@@ -147,16 +151,37 @@
             comboBox1.FlatStyle = FlatStyle.Flat;
             comboBox1.Location = new Point(145, 12);
             comboBox1.Name = "comboBox1";
-            comboBox1.Size = new Size(280, 23);
+            comboBox1.Size = new Size(230, 23);
             comboBox1.TabIndex = 1;
             comboBox1.SelectedIndexChanged += comboBox1_SelectedIndexChanged;
+            // 
+            // label2
+            // 
+            label2.AutoSize = true;
+            label2.Font = new Font("Segoe UI", 11F, FontStyle.Bold);
+            label2.ForeColor = Color.FromArgb(66, 165, 245);
+            label2.Location = new Point(390, 13);
+            label2.Name = "label2";
+            label2.Size = new Size(110, 20);
+            label2.TabIndex = 3;
+            label2.Text = "Cuatrimestre:";
+            // 
+            // comboBox2
+            // 
+            comboBox2.DropDownStyle = ComboBoxStyle.DropDownList;
+            comboBox2.FlatStyle = FlatStyle.Flat;
+            comboBox2.Location = new Point(510, 12);
+            comboBox2.Name = "comboBox2";
+            comboBox2.Size = new Size(230, 23);
+            comboBox2.TabIndex = 4;
+            comboBox2.SelectedIndexChanged += comboBox2_SelectedIndexChanged;
             // 
             // btnBuscar
             // 
             btnBuscar.BackColor = Color.FromArgb(66, 165, 245);
             btnBuscar.FlatStyle = FlatStyle.Flat;
             btnBuscar.ForeColor = Color.White;
-            btnBuscar.Location = new Point(435, 12);
+            btnBuscar.Location = new Point(755, 12);
             btnBuscar.Name = "btnBuscar";
             btnBuscar.Size = new Size(100, 28);
             btnBuscar.TabIndex = 2;
@@ -267,6 +292,8 @@
         private System.Windows.Forms.Panel panelFiltro;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.ComboBox comboBox1;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.ComboBox comboBox2;
         private System.Windows.Forms.Button btnBuscar;
         private System.Windows.Forms.DataGridView dataGridView1;
         private MenuStrip menuStrip2;

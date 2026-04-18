@@ -71,3 +71,5 @@ También se recomienda realizar copias de seguridad periódicas de la base de da
 * Robert Avila (23-SISN-2-001): Se agrego la opcion de conexion Local o Remota, modificaron todos los apartados para permitir la conexion en Modo Local o Remoto, se realizaron correciones menores.
 * Roberto Gabriel Nieves Jimenez (23-SISN-2-2051): Se modifico el apartado de Agregar Materia para asignar Cuatrimestre.
 * Alexander Torres Tapia (18-EISN-2-046): Se modificaron las ventanas de Asignar, Agregar, Modificar, Buscar e Imprimir para un Tema Oscuro.
+* Angel Daniel Mota (21-EISN-2-017): Se realizo la documentación.
+* Breidy Alcántara Familia (23-SISN-2-020): Se agrego la barra de busqueda de cuatrimestre en la Pagina Principal.

@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Gestor de Horarios de Maestros")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+40229b05d5965ad76f7813986704990191c33fd1")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+268140834cd9ad72ff55e898b606356db303fd18")]
 [assembly: System.Reflection.AssemblyProductAttribute("Gestor de Horarios de Maestros")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Gestor de Horarios de Maestros")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
