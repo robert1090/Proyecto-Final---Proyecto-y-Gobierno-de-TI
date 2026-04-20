@@ -73,3 +73,6 @@ También se recomienda realizar copias de seguridad periódicas de la base de da
 * Alexander Torres Tapia (18-EISN-2-046): Se modificaron las ventanas de Asignar, Agregar, Modificar, Buscar e Imprimir para un Tema Oscuro.
 * Angel Daniel Mota (21-EISN-2-017): Se realizo la documentación.
 * Breidy Alcántara Familia (23-SISN-2-020): Se agrego la barra de busqueda de cuatrimestre en la Pagina Principal.
+* Enger Reina (23-SISN-2-009), Breidy Alcántara Familia (23-SISN-2-020) y Henya Chailin Nuñez Severino (23-SISN-2-033): Realización del Video Intructivo del Programa.
+* Ray Radimir Zorrilla Santana (17-SISN-2-025): Se agrego la barra de busqueda de cuatrimestre en la Pagina de Imprimir.
+* Robert Avila (23-SISN-2-001): Se agrego el boton de Guía en la Pagina Principal para acceder al Video Intructivo del Programa.

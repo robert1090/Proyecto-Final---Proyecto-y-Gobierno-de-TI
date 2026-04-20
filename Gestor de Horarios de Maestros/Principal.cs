@@ -7,6 +7,7 @@ using System.Data.Common;
 using System.Data.SQLite;
 using System.IO;
 using System.Runtime.InteropServices;
+using System.Diagnostics;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace Gestor_de_Horarios_de_Maestros
@@ -563,6 +564,24 @@ namespace Gestor_de_Horarios_de_Maestros
                 {
                     MessageBox.Show("Error al eliminar: " + ex.Message);
                 }
+            }
+        }
+
+        private void guiaToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string url = "https://drive.google.com/file/d/1UNHbvbF-oWdM0VZK9ZTiwZxM3lkRS80N/view?usp=sharing";
+
+            try
+            {
+                Process.Start(new ProcessStartInfo
+                {
+                    FileName = url,
+                    UseShellExecute = true // Crucial para que Windows reconozca que es una URL
+                });
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("No se pudo abrir el navegador: " + ex.Message);
             }
         }
     }

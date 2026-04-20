@@ -52,35 +52,36 @@ namespace Gestor_de_Horarios_de_Maestros
 
         // --- LÓGICA DE DATOS ---
 
-        private void CargarDatosParaReporte(string filtroMaestro = "")
+        private void CargarDatosParaReporte(string filtroMaestro, string filtroCuatri)
         {
             try
             {
                 using (IDbConnection con = CrearConexion())
                 {
-                    string query = @"SELECT 
-                                MaestroNombre AS 'Docente', 
-                                IdMateria AS 'ID',
-                                MateriaNombre AS 'Materia', 
-                                Seccion AS 'Sección', 
-                                DiasImparte AS 'Días', 
-                                Hora AS 'Hora', 
-                                Aula AS 'Aula'
+                    // Base de la consulta
+                    string query = @"SELECT MaestroNombre, IdMateria, MateriaNombre, Seccion, DiasImparte, Hora, Aula, Cuatrimestre 
                              FROM HorariosView WHERE 1=1";
 
                     IDbCommand cmd = con.CreateCommand();
-                    cmd.Connection = con;
 
-                    if (!string.IsNullOrEmpty(filtroMaestro) && filtroMaestro != "Todo")
+                    // Filtro por Maestro
+                    if (filtroMaestro != "Todo" && !string.IsNullOrEmpty(filtroMaestro))
                     {
                         query += " AND MaestroNombre LIKE @nombre";
                         CrearParametro(cmd, "@nombre", "%" + filtroMaestro + "%");
                     }
 
+                    // Filtro por Cuatrimestre
+                    if (filtroCuatri != "Todo" && !string.IsNullOrEmpty(filtroCuatri))
+                    {
+                        query += " AND Cuatrimestre = @cuatri";
+                        CrearParametro(cmd, "@cuatri", filtroCuatri);
+                    }
+
                     query += " ORDER BY MaestroNombre ASC";
                     cmd.CommandText = query;
+                    cmd.Connection = con;
 
-                    // Adaptador universal para llenar el DataTable
                     DataTable dt = new DataTable();
                     con.Open();
                     using (IDataReader reader = cmd.ExecuteReader())
@@ -88,12 +89,11 @@ namespace Gestor_de_Horarios_de_Maestros
                         dt.Load(reader);
                     }
                     dataGridView1.DataSource = dt;
-                    dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error al cargar datos para el reporte: " + ex.Message);
+                MessageBox.Show("Error al filtrar: " + ex.Message);
             }
         }
 
@@ -104,25 +104,32 @@ namespace Gestor_de_Horarios_de_Maestros
                 using (IDbConnection con = CrearConexion())
                 {
                     con.Open();
-                    IDbCommand cmd = con.CreateCommand();
-                    cmd.CommandText = "SELECT DISTINCT MaestroNombre FROM HorariosView ORDER BY MaestroNombre ASC";
+                    // Cargar Maestros
+                    IDbCommand cmd1 = con.CreateCommand();
+                    cmd1.CommandText = "SELECT DISTINCT MaestroNombre FROM HorariosView ORDER BY MaestroNombre ASC";
 
-                    DataTable dt = new DataTable();
-                    using (IDataReader reader = cmd.ExecuteReader())
-                    {
-                        dt.Load(reader);
-                    }
+                    // Cargar Cuatrimestres
+                    IDbCommand cmd2 = con.CreateCommand();
+                    cmd2.CommandText = "SELECT DISTINCT Cuatrimestre FROM HorariosView ORDER BY Cuatrimestre ASC";
 
+                    // Llenar Combo 1 (Maestros)
+                    DataTable dt1 = new DataTable();
+                    using (IDataReader reader1 = cmd1.ExecuteReader()) { dt1.Load(reader1); }
                     comboBox1.Items.Clear();
                     comboBox1.Items.Add("Todo");
-                    foreach (DataRow row in dt.Rows)
-                    {
-                        comboBox1.Items.Add(row["MaestroNombre"].ToString());
-                    }
+                    foreach (DataRow row in dt1.Rows) comboBox1.Items.Add(row["MaestroNombre"].ToString());
                     comboBox1.SelectedIndex = 0;
+
+                    // Llenar Combo 2 (Cuatrimestre)
+                    DataTable dt2 = new DataTable();
+                    using (IDataReader reader2 = cmd2.ExecuteReader()) { dt2.Load(reader2); }
+                    comboBox2.Items.Clear();
+                    comboBox2.Items.Add("Todo");
+                    foreach (DataRow row in dt2.Rows) comboBox2.Items.Add(row["Cuatrimestre"].ToString());
+                    comboBox2.SelectedIndex = 0;
                 }
             }
-            catch (Exception ex) { /* Manejo silencioso o log */ }
+            catch (Exception ex) { /* Manejo de errores */ }
         }
 
         // --- EXPORTACIÓN A PDF ---
@@ -192,22 +199,7 @@ namespace Gestor_de_Horarios_de_Maestros
         private void FormImprimir_Load(object sender, EventArgs e)
         {
             LlenarFiltros();
-            CargarDatosParaReporte("");
-        }
-
-        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (comboBox1.SelectedItem == null) return;
-
-            string seleccion = comboBox1.SelectedItem.ToString();
-            if (seleccion == "Todo")
-            {
-                CargarDatosParaReporte("");
-            }
-            else
-            {
-                CargarDatosParaReporte(seleccion);
-            }
+            CargarDatosParaReporte("", "");
         }
 
         private void maximizarToolStripMenuItem_Click(object sender, EventArgs e)
@@ -252,6 +244,26 @@ namespace Gestor_de_Horarios_de_Maestros
                 ReleaseCapture();
                 SendMessage(this.Handle, 0x112, 0xf012, 0);
             }
+        }
+
+        private void AplicarFiltros()
+        {
+            // Verificamos que los items existan
+            string m = comboBox1.SelectedItem?.ToString() ?? "Todo";
+            string c = comboBox2.SelectedItem?.ToString() ?? "Todo";
+
+            CargarDatosParaReporte(m, c);
+        }
+
+        // Eventos de los ComboBox
+        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            AplicarFiltros();
+        }
+
+        private void comboBox2_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            AplicarFiltros();
         }
 
     }

@@ -36,6 +36,8 @@
             cerrarToolStripMenuItem5 = new ToolStripMenuItem();
             maximizarToolStripMenuItem = new ToolStripMenuItem();
             minimizarToolStripMenuItem = new ToolStripMenuItem();
+            comboBox2 = new ComboBox();
+            label2 = new Label();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             menuStrip2.SuspendLayout();
             SuspendLayout();
@@ -52,7 +54,7 @@
             // 
             // button1
             // 
-            button1.Location = new Point(253, 40);
+            button1.Location = new Point(464, 42);
             button1.Margin = new Padding(2);
             button1.Name = "button1";
             button1.Size = new Size(78, 20);
@@ -122,12 +124,35 @@
             minimizarToolStripMenuItem.Size = new Size(32, 24);
             minimizarToolStripMenuItem.Click += minimizarToolStripMenuItem_Click;
             // 
+            // comboBox2
+            // 
+            comboBox2.FormattingEnabled = true;
+            comboBox2.Location = new Point(338, 38);
+            comboBox2.Name = "comboBox2";
+            comboBox2.Size = new Size(121, 23);
+            comboBox2.TabIndex = 5;
+            comboBox2.SelectedIndexChanged += comboBox2_SelectedIndexChanged;
+            // 
+            // label2
+            // 
+            label2.AutoSize = true;
+            label2.BackColor = Color.Transparent;
+            label2.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            label2.ForeColor = SystemColors.ControlLightLight;
+            label2.Location = new Point(255, 42);
+            label2.Name = "label2";
+            label2.Size = new Size(83, 15);
+            label2.TabIndex = 6;
+            label2.Text = "Cuatrimestre:";
+            // 
             // FormImprimir
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(32, 32, 36);
             ClientSize = new Size(553, 311);
+            Controls.Add(label2);
+            Controls.Add(comboBox2);
             Controls.Add(menuStrip2);
             Controls.Add(label1);
             Controls.Add(dataGridView1);
@@ -156,5 +181,7 @@
         private ToolStripMenuItem cerrarToolStripMenuItem5;
         private ToolStripMenuItem maximizarToolStripMenuItem;
         private ToolStripMenuItem minimizarToolStripMenuItem;
+        private ComboBox comboBox2;
+        private Label label2;
     }
 }

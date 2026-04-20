@@ -30,6 +30,7 @@
             localToolStripMenuItem = new ToolStripMenuItem();
             actualizarToolStripMenuItem = new ToolStripMenuItem();
             imprimirToolStripMenuItem = new ToolStripMenuItem();
+            guiaToolStripMenuItem = new ToolStripMenuItem();
             panelFiltro = new Panel();
             label1 = new Label();
             comboBox1 = new ComboBox();
@@ -51,7 +52,7 @@
             // 
             menuStrip1.BackColor = Color.FromArgb(45, 45, 48);
             menuStrip1.ForeColor = Color.White;
-            menuStrip1.Items.AddRange(new ToolStripItem[] { agregarToolStripMenuItem, asignarToolStripMenuItem, modificarToolStripMenuItem, buscarToolStripMenuItem, removerToolStripMenuItem, conexiónToolStripMenuItem, localToolStripMenuItem, actualizarToolStripMenuItem, imprimirToolStripMenuItem });
+            menuStrip1.Items.AddRange(new ToolStripItem[] { agregarToolStripMenuItem, asignarToolStripMenuItem, modificarToolStripMenuItem, buscarToolStripMenuItem, removerToolStripMenuItem, conexiónToolStripMenuItem, localToolStripMenuItem, actualizarToolStripMenuItem, imprimirToolStripMenuItem, guiaToolStripMenuItem });
             menuStrip1.Location = new Point(0, 24);
             menuStrip1.Name = "menuStrip1";
             menuStrip1.Size = new Size(950, 24);
@@ -120,6 +121,13 @@
             imprimirToolStripMenuItem.Text = "🖨️ Imprimir";
             imprimirToolStripMenuItem.Click += imprimirToolStripMenuItem_Click;
             // 
+            // guiaToolStripMenuItem
+            // 
+            guiaToolStripMenuItem.Name = "guiaToolStripMenuItem";
+            guiaToolStripMenuItem.Size = new Size(58, 20);
+            guiaToolStripMenuItem.Text = "Guía 📖";
+            guiaToolStripMenuItem.Click += guiaToolStripMenuItem_Click;
+            // 
             // panelFiltro
             // 
             panelFiltro.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
@@ -162,7 +170,7 @@
             label2.ForeColor = Color.FromArgb(66, 165, 245);
             label2.Location = new Point(390, 13);
             label2.Name = "label2";
-            label2.Size = new Size(110, 20);
+            label2.Size = new Size(104, 20);
             label2.TabIndex = 3;
             label2.Text = "Cuatrimestre:";
             // 
@@ -301,5 +309,6 @@
         private ToolStripMenuItem minimizarToolStripMenuItem;
         private ToolStripMenuItem cerrarToolStripMenuItem;
         private ToolStripMenuItem localToolStripMenuItem;
+        private ToolStripMenuItem guiaToolStripMenuItem;
     }
 }
